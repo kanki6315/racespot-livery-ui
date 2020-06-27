@@ -7,29 +7,29 @@
   </div>
   <div class="modal-body">
     <div class="row">
-      <div class="col-sm-6">
-        <span class="font-weight-bold"># Cars:</span> {{series.cars.length}}
+      <div class="col">
+        <span class="font-weight-bold">Cars: </span><span *ngFor="let car of series.cars">{{car.name}}, </span>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-6" *ngIf="liveries.length === 0">
         <span class="font-weight-bold">No Liveries Uploaded for Series</span>
       </div>
-      <div class="col-sm-6" *ngIf="liveries.length !== 0 && series.isTeam">
+      <div class="col" *ngIf="liveries.length !== 0 && series.isTeam">
         <ngb-accordion activeIds="ngb-panel-0">
-          <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}}">
+          <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}} - {{team.carName}}">
             <ng-template ngbPanelContent>
               <app-series-livery-submission [series]="series" [liveries]="teamLiveryMap.get(team.iRacingId) || []"></app-series-livery-submission>
             </ng-template>
           </ngb-panel>
         </ngb-accordion>
       </div>
-      <div class="col-sm-6" *ngIf="liveries.length !== 0 && !series.isTeam">
+      <div class="col" *ngIf="liveries.length !== 0 && !series.isTeam">
             <app-series-livery-submission [series]="series" [liveries]="liveries || []"></app-series-livery-submission>
       </div>
     </div>
   </div>
   <div class="modal-footer" *ngIf="series.isTeam">
-    <button type="button" class="btn btn-primary">Add Team</button>
+    <button type="button" class="btn btn-primary" (click)="addTeam()">Add Team</button>
   </div>
 </ng-template>

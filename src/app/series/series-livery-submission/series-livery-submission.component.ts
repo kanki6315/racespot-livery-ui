@@ -14,12 +14,17 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   @Input() series: Series;
   @Input() liveries: Livery[];
 
+  isNewTeam = true;
   isUploading = false;
   liveryTypes = ['Car', 'Helmet', 'Suit', 'Spec Map'];
+  carNames = [];
   uploadForm = this._formBuilder.group({
     liveryType: ['Car'],
+    carName: [''],
+    iracingId: [''],
     liveryFile: ['']
   });
+  private _file: File | null = null;
   private _liveryToUpload: Livery | null = null;
 
   constructor(private _liveryService: LiveryService,
@@ -27,6 +32,14 @@ export class SeriesLiverySubmissionComponent implements OnInit {
               private _authenticationService: AuthenticationService) { }
 
   ngOnInit() {
+    if (this.liveries && this.liveries.length > 0) {
+      this.isNewTeam = false;
+      this.uploadForm.patchValue({carName: this.liveries.filter(f => f.liveryType === 'Car')[0].carName});
+      this.uploadForm.patchValue({iracingId: this.liveries.filter(f => f.liveryType === 'Car')[0].iTeamId});
+      this.uploadForm.get('iracingId').disable();
+    }
+
+    this.carNames = this.series.cars.map(c => c.name);
   }
 
   get liveryType(): AbstractControl {
@@ -38,9 +51,27 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     return liveryType;
   }
 
+  get iracingId(): AbstractControl {
+    const iracingId = this.uploadForm.get('iracingId');
+    if (iracingId === null) {
+      throw new Error('The iracingId control does not exist');
+    }
+
+    return iracingId;
+  }
+
+  get carName(): AbstractControl {
+    const carName = this.uploadForm.get('carName');
+    if (carName === null) {
+      throw new Error('The carName control does not exist');
+    }
+
+    return carName;
+  }
+
   getLiveryFileName(): string | null {
-    if (this._liveryToUpload !== null) {
-      return this._liveryToUpload.file.name;
+    if (this._file !== null) {
+      return this._file.name;
     }
 
     return null;
@@ -56,38 +87,39 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   }
 
   uploadLivery() {
-    if (this._liveryToUpload === null) {
+    if (this._file === null) {
       return;
     }
-
-    const payload = new FormData();
-
-    payload.append('type', this._liveryToUpload.liveryType.replace(' ', ''));
-    payload.append('file', this._liveryToUpload.file);
-    payload.append('iTeamId', '');
-
+    this._liveryToUpload = {liveryType: this.liveryType.value, file: this._file, previewUrl: null,
+      iTeamId: this.iracingId.value, iTeamName: '', carName: this.carName.value, id: null, uploadUrl: ''};
+    const carId = this.series.cars.filter(c => c.name === this._liveryToUpload.carName)[0].id;
     this.isUploading = true;
-    this._liveryService.upload(payload, this.series.id, '')
-      .subscribe((response: Livery) => {
-        if (this._liveryToUpload) {
-          this._liveryToUpload.previewUrl = response.previewUrl;
-          this.isUploading = false;
-          const liveryType = this._liveryToUpload.liveryType;
-          const previousLiveryIndex = this.liveries.findIndex(l => l.liveryType === liveryType);
+
+    this._liveryService.getPresignedUrl(this.series.id, this._liveryToUpload, carId).subscribe((returnLivery) => {
+      this._liveryService.upload(this._liveryToUpload.file, returnLivery.uploadUrl).subscribe((response) => {
+        this._liveryService.finalizeUpload(returnLivery.id).subscribe((finalLivery) => {
+          const previousLiveryIndex = this.liveries.findIndex(l => l.id === finalLivery.id);
           if (previousLiveryIndex !== -1) {
-            this.liveries[previousLiveryIndex] = this._liveryToUpload;
+            this.liveries[previousLiveryIndex] = finalLivery;
           } else {
-            this.liveries.push(this._liveryToUpload);
+            this.liveries.push(finalLivery);
           }
           this._liveryToUpload = null;
-        }
-      });
+          this._file = null;
+          this.isUploading = false;
+        }, error => {
+          console.log(error.error); // probably an error converting tga to png, invalid file
+        });
+      }, (error => {
+        console.log(error.error); // error uploading to S3, should NEVER occur
+      }));
+    }, (error => {
+        console.log(error.error); // validation error before pre-signed url generated
+    }));
   }
 
   onFileAdded(event: any) {
-    const livery = { liveryType: this.liveryType.value, file: event.target.files[0], previewUrl: null,
-        iTeamId: '', iTeamName: '', carName: '', id: ''};
-    this._liveryToUpload = livery;
+    this._file = event.target.files[0];
   }
 
   hasLiveryPreview(): boolean {

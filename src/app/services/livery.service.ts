@@ -14,7 +14,16 @@ export class LiveryService {
     return this._http.get<Livery[]>(`${this._baseUrl}/api/series/${seriesId}/liveries`);
   }
 
-  upload(payload: FormData, seriesId: string, carId: string): Observable<Livery> {
-    return this._http.post<Livery>(`/api/series/${seriesId}/cars/${carId}/liveries`, payload);
+  finalizeUpload(liveryId: string): Observable<Livery> {
+    return this._http.post<Livery>(`${this._baseUrl}/api/liveries/${liveryId}/finalize`, null);
+  }
+
+  getPresignedUrl(seriesId: string, livery: Livery, carId: string): Observable<Livery> {
+    return this._http.post<Livery>(`${this._baseUrl}/api/series/${seriesId}/liveries`,
+      {iTeamId: livery.iTeamId, carId: carId, liveryType: livery.liveryType});
+  }
+
+  upload(payload: File, url: string): Observable<any> {
+    return this._http.put(url, payload);
   }
 }

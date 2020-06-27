@@ -1,9 +1,23 @@
 <form [formGroup]="uploadForm" novalidate>
   <div class="form-group">
-    <label for="livery-type-{{series.id}}">Livery Type</label>
-    <select class="form-control" id="livery-type-{{series.id}}" formControlName="liveryType">
-      <option *ngFor="let liveryType of liveryTypes" [ngValue]="liveryType">{{liveryType}}</option>
-    </select>
+    <div class="row">
+      <div class="col-sm-3">
+        <label for="livery-type-{{series.id}}">Livery Type</label>
+        <select class="form-control" id="livery-type-{{series.id}}" formControlName="liveryType">
+          <option *ngFor="let liveryType of liveryTypes" [ngValue]="liveryType">{{liveryType}}</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <label for="car-name-{{series.id}}">Car</label>
+        <select class="form-control" id="car-name-{{series.id}}" formControlName="carName">
+          <option *ngFor="let carName of carNames" [ngValue]="carName">{{carName}}</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <label for="iracing-id-{{series.id}}">iRacing ID</label>
+        <input type="text" id="iracing-id-{{series.id}}" class="form-control" formControlName="iracingId">
+      </div>
+    </div>
   </div>
   <div class="custom-file">
     <input type="file" accept=".tga" class="custom-file-input" id="livery-{{series.id}}"

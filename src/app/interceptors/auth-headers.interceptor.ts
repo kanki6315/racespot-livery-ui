@@ -16,7 +16,7 @@ export class AuthHeadersInterceptorService implements HttpInterceptor {
   constructor(private _authService: AuthenticationService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this._authService.getToken() != null) {
+    if (this._authService.getToken() != null && !req.url.includes('s3')) {
       const clonedReq = req.clone({
         headers: new HttpHeaders({
           'Authorization': `Bearer ${this._authService.getToken()}`

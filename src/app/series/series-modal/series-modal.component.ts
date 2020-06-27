@@ -18,9 +18,9 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
   id: string;
   series: Series;
   private _modal: NgbModalRef;
-  teamLiveryMap: Map<string, Livery[]>;
+  teamLiveryMap: Map<string, Livery[]> = new Map<string, Livery[]>();
   liveries: Livery[] = [];
-  teams: Team[];
+  teams: Team[] = [];
 
   @ViewChild('content', { static: false }) content: ElementRef;
   constructor(
@@ -75,5 +75,11 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
 
   backToSeriesList(): void {
     this._router.navigate(['/']);
+  }
+
+  addTeam(): void {
+    if (this.teams.filter(t => !t.name).length === 0) {
+      this.teams.push({name: '', iRacingId: '', carName: ''});
+    }
   }
 }
