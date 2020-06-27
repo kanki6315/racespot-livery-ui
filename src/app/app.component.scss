@@ -1,0 +1,59 @@
+a,
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+.content {
+  min-height: 100vh;
+  margin-top: 20px;
+}
+
+.navigation {
+  height: 78px;
+  display: flex;
+  padding: 0 20px;
+  align-items: center;
+  background-color: #e8e8e8;
+  color: #343a40;
+
+  .menu-items {
+    flex: 2;
+  }
+
+  .profile{
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .branding-logo{
+    height: 65px;
+  }
+
+  .item-list{
+    margin: 0;
+    padding: 0;
+
+    .item{
+      display: inline-block;
+      margin-right: 20px;
+
+      a {
+        color: #343a40;
+      }
+
+      &:hover{
+        box-shadow: 0 6px 0px -5px #343a40;
+      }
+
+      &.active {
+        box-shadow: 0 7px 0px -5px #343a40;
+      }
+
+      &.no-hover:hover {
+        box-shadow: none;
+      }
+    }
+  }
+}

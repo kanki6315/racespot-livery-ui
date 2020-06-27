@@ -1,0 +1,11 @@
+<h1 class="mb-3">Series</h1>
+<div class="container-fluid" style="height: calc(100% - 110px);">
+  <div class="row" *ngFor="let series of seriesList | async">
+    <div class="col-sm-3">
+      <div class="text-center card-deck" id="events">
+        <app-series-card [series]="series"></app-series-card>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>
