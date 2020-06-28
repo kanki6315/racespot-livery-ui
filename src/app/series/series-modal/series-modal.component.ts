@@ -74,6 +74,7 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
   }
 
   backToSeriesList(): void {
+    this._modal.close();
     this._router.navigate(['/']);
   }
 

@@ -1,0 +1,25 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">iRacing Verification</h4>
+    <button type="button" class="close" (click)="modal.dismiss()">
+      <span>&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="uploadForm" novalidate>
+  <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-3">
+            <label for="iracing-id">iRacing ID</label>
+            <input type="text" id="iracing-id" class="form-control" formControlName="iracingId">
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="submit()">
+      <span *ngIf="isUploading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Submit</button>
+  </div>
+  </form>
+</ng-template>

@@ -5,6 +5,7 @@ import {Observable, of, ReplaySubject} from 'rxjs';
 import {User} from '../models/user';
 import {catchError, map, publishReplay, refCount, startWith, tap} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
+import {Livery} from '../models/livery';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +74,22 @@ export class AuthenticationService {
     );
   }
 
+  public canSendVerificationMessage(): Observable<boolean> {
+    return this.getUser().pipe(
+      map(user => {
+        if (!user) {
+          return false;
+        }
+        if (!user.lastInviteSent) {
+          return true;
+        }
+        let oneDayAgo = new Date();
+        oneDayAgo = new Date(oneDayAgo.getTime() - (1000 * 60 * 60 * 24)); // (1000 * 60 * 60 * 24));
+        return new Date(user.lastInviteSent) < oneDayAgo;
+      })
+    );
+  }
+
   public setToken(token: string): void {
     this.tokenSubject.next(token);
   }
@@ -109,7 +126,7 @@ export class AuthenticationService {
     return this.getUser().pipe(
       map(user => {
         if (user) {
-          if (!user.iracingId && user.iracingId.length === 0) {
+          if (!user.iracingId || user.iracingId.length === 0) {
             return user.emailAddress;
           }
           return `${user.firstName} ${user.lastName}`;
@@ -117,5 +134,13 @@ export class AuthenticationService {
         return '';
       })
     );
+  }
+
+  sendVerificationMessage(iracingId: string): Observable<any> {
+    return this.http.post<any>(`${this._baseUrl}/api/accounts/send-iracing-verification`, {iracingId: iracingId});
+  }
+
+  finalizeVerificationMessage(key: string): Observable<any> {
+    return this.http.post<any>(`${this._baseUrl}/api/accounts/iracing-verification`, {key: key});
   }
 }

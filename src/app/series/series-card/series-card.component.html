@@ -26,7 +26,7 @@
         <h5 class="card-title">{{series.name}}</h5>
         <p class="card-text"><small class="text-muted">{{series.description}}</small></p>
         <p class="card-text" *ngIf="series.isTeam"><small class="text-muted">Team Series</small></p>
-        <button type="button" class="btn btn-primary mr-2" [routerLink]="[series.id]" [disabled]="series.isArchived">My Paints</button>
+        <button *ngIf="isAuthenticated | async" type="button" class="btn btn-primary mr-2" [routerLink]="[series.id]" [disabled]="!(isVerified | async)">My Paints</button>
       </div>
     </div>
   </div>

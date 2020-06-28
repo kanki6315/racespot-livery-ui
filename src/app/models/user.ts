@@ -5,4 +5,5 @@ export class User {
   iracingId: string;
   firstName: string;
   lastName: string;
+  lastInviteSent: Date;
 }

@@ -5,6 +5,7 @@ import {SeriesComponent} from './series.component';
 import {SeriesListComponent} from './series-list/series-list.component';
 import {SeriesModalComponent} from './series-modal/series-modal.component';
 import {SeriesResolverService} from './series-resolver.service';
+import {VerificationModalComponent} from '../verification-modal/verification-modal.component';
 
 
 
@@ -17,6 +18,10 @@ const appRoutes: Routes = [
         path: '',
         component: SeriesListComponent,
         children: [
+          {
+            path: 'verify',
+            component: VerificationModalComponent
+          },
           {
             path: ':id',
             component: SeriesModalComponent,

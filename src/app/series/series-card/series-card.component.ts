@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Series} from '../../models/series';
+import {AuthenticationService} from '../../services/authentication.service';
 
 @Component({
   selector: 'app-series-card',
@@ -8,7 +9,10 @@ import {Series} from '../../models/series';
 })
 export class SeriesCardComponent implements OnInit {
 
-  constructor() { }
+  public isAuthenticated = this._authenticationService.isAuthenticated();
+  public isVerified = this._authenticationService.isVerified();
+  constructor(
+    private _authenticationService: AuthenticationService) { }
   @Input() series: Series;
 
   ngOnInit(): void {
