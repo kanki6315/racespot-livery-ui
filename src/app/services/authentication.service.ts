@@ -140,7 +140,19 @@ export class AuthenticationService {
     return this.http.post<any>(`${this._baseUrl}/api/accounts/send-iracing-verification`, {iracingId: iracingId});
   }
 
-  finalizeVerificationMessage(key: string): Observable<any> {
-    return this.http.post<any>(`${this._baseUrl}/api/accounts/iracing-verification`, {key: key});
+  finalizeVerificationMessage(key: string): Observable<User> {
+    return this.http.post<User>(`${this._baseUrl}/api/accounts/iracing-verification`, {key: key});
+  }
+
+  setIracingId(iracingId: string) {
+    this._getUserObservable.pipe(
+      map(user => ({...user, iracingId: iracingId}))
+    );
+  }
+
+  setLastInviteDate() {
+    this._getUserObservable.pipe(
+      map(user => ({...user, lastInviteSent: new Date()}))
+    );
   }
 }

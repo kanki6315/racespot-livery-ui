@@ -54,6 +54,7 @@ export class AppComponent implements OnInit, OnDestroy {
           localStorage.removeItem('key');
           if (storedKey != null) {
             this.authenticationService.finalizeVerificationMessage(storedKey).subscribe((result) => {
+              this.authenticationService.setIracingId(result.iracingId);
               console.log('success!');
               this.router.navigate([]);
             }, error => {
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.isAuthenticated.subscribe((isLoggedIn) => {
             if (isLoggedIn) {
               this.authenticationService.finalizeVerificationMessage(value).subscribe((result) => {
+                this.authenticationService.setIracingId(result.iracingId);
                 console.log('success!');
                 this.router.navigate([]);
               }, error => {

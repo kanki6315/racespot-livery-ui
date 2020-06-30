@@ -29,6 +29,7 @@ export class VerificationModalComponent implements OnInit, AfterViewInit {
   submit() {
     const iRacingId = this.iracingId.value;
     this._authenticationService.sendVerificationMessage(iRacingId).subscribe((response) => {
+      this._authenticationService.setLastInviteDate();
       this.backToSeriesList();
     }, (error => {
       console.log(error.error); // Account probably owned by another user
