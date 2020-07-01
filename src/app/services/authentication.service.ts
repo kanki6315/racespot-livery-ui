@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
-import {Observable, of, ReplaySubject} from 'rxjs';
+import {Observable, of, ReplaySubject, Subject} from 'rxjs';
 import {User} from '../models/user';
-import {catchError, map, publishReplay, refCount, startWith, tap} from 'rxjs/operators';
+import {catchError, map, merge, publishReplay, refCount, startWith, tap} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {Livery} from '../models/livery';
 
@@ -16,6 +16,7 @@ export class AuthenticationService {
     public router: Router,
     private http: HttpClient) {
   }
+  private userUpdateSubject = new Subject<User>();
   private helper = new JwtHelperService();
   public _baseUrl = 'https://4bvauc5gjl.execute-api.us-east-2.amazonaws.com/Prod';
   private tokenSubject = new ReplaySubject<string | null>(1);
@@ -44,7 +45,12 @@ export class AuthenticationService {
           }),
         );
     }
-    return this._getUserObservable;
+    return this._getUserObservable
+      .pipe(
+        merge(this.userUpdateSubject.asObservable()),
+        publishReplay(),
+        refCount()
+      );
   }
 
   public isAdmin(): Observable<boolean> {
@@ -144,15 +150,15 @@ export class AuthenticationService {
     return this.http.post<User>(`${this._baseUrl}/api/accounts/iracing-verification`, {key: key});
   }
 
-  setIracingId(iracingId: string) {
-    this._getUserObservable.pipe(
-      map(user => ({...user, iracingId: iracingId}))
-    );
+  setIracingId(user: User) {
+    this._getUserObservable.subscribe(existing => {
+      this.userUpdateSubject.next({...existing, iracingId: user.iracingId, firstName: user.firstName, lastName: user.lastName});
+    });
   }
 
   setLastInviteDate() {
-    this._getUserObservable.pipe(
-      map(user => ({...user, lastInviteSent: new Date()}))
-    );
+    this._getUserObservable.subscribe(user => {
+      this.userUpdateSubject.next({...user, lastInviteSent: new Date()});
+    });
   }
 }

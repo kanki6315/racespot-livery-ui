@@ -42,6 +42,9 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
               liveries.forEach(t => {
                 if (this.teamLiveryMap.has(t.iTeamId)) {
                   // @ts-ignore
+                  if (t.liveryType === 'Car') {
+                    this.teams.filter(team => team.iRacingId === t.iTeamId)[0].carName = t.carName;
+                  }
                   this.teamLiveryMap.get(t.iTeamId).push(t);
                 } else {
                   this.teamLiveryMap.set(t.iTeamId, [t]);
@@ -79,8 +82,8 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
   }
 
   addTeam(): void {
-    if (this.teams.filter(t => !t.name).length === 0) {
-      this.teams.push({name: '', iRacingId: '', carName: ''});
+    if (this.teams.length === 0 || this.teams.filter(t => t.name === 'New Team' && !t.iRacingId).length === 0) {
+      this.teams.push({name: 'New Team', iRacingId: '', carName: ''});
     }
   }
 }

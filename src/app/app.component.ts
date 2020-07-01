@@ -3,6 +3,8 @@ import {Observable, Subscription} from 'rxjs';
 import {AuthenticationService} from './services/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
+import {ErrorModalComponent} from './error-modal/error-modal.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private authenticationService: AuthenticationService,
               private router: Router,
               private route: ActivatedRoute,
-  ) { }
+              private _modalService: NgbModal) { }
 
   ngOnInit() {
     this.subs.add(
@@ -54,11 +56,12 @@ export class AppComponent implements OnInit, OnDestroy {
           localStorage.removeItem('key');
           if (storedKey != null) {
             this.authenticationService.finalizeVerificationMessage(storedKey).subscribe((result) => {
-              this.authenticationService.setIracingId(result.iracingId);
-              console.log('success!');
+              this.authenticationService.setIracingId(result);
               this.router.navigate([]);
             }, error => {
-              console.log(error.error); // likely different user than generated invite or key already used
+              const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+              errorComponentInstance.errorMessage = error.error;
+              // likely different user than generated invite or key already used
               this.router.navigate([]);
             });
           } else {
@@ -68,11 +71,12 @@ export class AppComponent implements OnInit, OnDestroy {
           this.isAuthenticated.subscribe((isLoggedIn) => {
             if (isLoggedIn) {
               this.authenticationService.finalizeVerificationMessage(value).subscribe((result) => {
-                this.authenticationService.setIracingId(result.iracingId);
-                console.log('success!');
+                this.authenticationService.setIracingId(result);
                 this.router.navigate([]);
               }, error => {
-                console.log(error.error); // likely different user than generated invite or key already used
+                const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+                errorComponentInstance.errorMessage = error.error;
+                // likely different user than generated invite or key already used
                 this.router.navigate([]);
               });
             } else {

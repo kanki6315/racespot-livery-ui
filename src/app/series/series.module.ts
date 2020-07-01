@@ -6,7 +6,7 @@ import { SeriesCardComponent } from './series-card/series-card.component';
 import { SeriesModalComponent } from './series-modal/series-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { SeriesLiverySubmissionComponent } from './series-livery-submission/series-livery-submission.component';
-import {NgbAccordionModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbAccordionModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -16,7 +16,8 @@ import {NgbAccordionModule} from '@ng-bootstrap/ng-bootstrap';
         CommonModule,
         SeriesRoutingModule,
         ReactiveFormsModule,
-        NgbAccordionModule
+        NgbAccordionModule,
+        NgbAlertModule
     ]
 })
 export class SeriesModule { }

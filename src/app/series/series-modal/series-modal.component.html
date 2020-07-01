@@ -12,14 +12,14 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-6" *ngIf="liveries.length === 0">
+      <div class="col-sm-6" *ngIf="teams.length === 0 && series.isTeam">
         <span class="font-weight-bold">No Liveries Uploaded for Series</span>
       </div>
-      <div class="col" *ngIf="liveries.length !== 0 && series.isTeam">
+      <div class="col" *ngIf="teams.length !== 0 && series.isTeam">
         <ngb-accordion activeIds="ngb-panel-0">
           <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}} - {{team.carName}}">
             <ng-template ngbPanelContent>
-              <app-series-livery-submission [series]="series" [liveries]="teamLiveryMap.get(team.iRacingId) || []"></app-series-livery-submission>
+              <app-series-livery-submission [series]="series" [liveries]="teamLiveryMap.get(team.iRacingId) || []" [team]="team"></app-series-livery-submission>
             </ng-template>
           </ngb-panel>
         </ngb-accordion>

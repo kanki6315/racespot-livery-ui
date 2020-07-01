@@ -4,6 +4,7 @@ import {AbstractControl, FormBuilder} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LiveryService} from '../services/livery.service';
 import {AuthenticationService} from '../services/authentication.service';
+import {ErrorModalComponent} from '../error-modal/error-modal.component';
 
 @Component({
   selector: 'app-verification-modal',
@@ -27,12 +28,17 @@ export class VerificationModalComponent implements OnInit, AfterViewInit {
   }
 
   submit() {
+    this.isUploading = true;
     const iRacingId = this.iracingId.value;
     this._authenticationService.sendVerificationMessage(iRacingId).subscribe((response) => {
       this._authenticationService.setLastInviteDate();
+      this.isUploading = false;
       this.backToSeriesList();
     }, (error => {
-      console.log(error.error); // Account probably owned by another user
+      this.isUploading = false;
+      const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+      errorComponentInstance.errorMessage = error.error;
+      // Account probably owned by another user
     }));
   }
 
@@ -41,7 +47,6 @@ export class VerificationModalComponent implements OnInit, AfterViewInit {
     if (iracingId === null) {
       throw new Error('The iracingId control does not exist');
     }
-
     return iracingId;
   }
 

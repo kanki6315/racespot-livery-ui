@@ -1,4 +1,7 @@
-<form [formGroup]="uploadForm" novalidate>
+<form [formGroup]="uploadForm" novalidate xmlns="http://www.w3.org/1999/html">
+  <div class="row" *ngIf="isCarSelected() && priorCar !== null && priorCar.length > 0 && priorCar !== carName.value">
+    <ngb-alert type="danger" dismissible="false">If you change your car, you will lose your existing paint. Please ensure you upload a new Spec Map.</ngb-alert>
+  </div>
   <div class="form-group">
     <div class="row">
       <div class="col-sm-3">
@@ -7,14 +10,14 @@
           <option *ngFor="let liveryType of liveryTypes" [ngValue]="liveryType">{{liveryType}}</option>
         </select>
       </div>
-      <div class="col-sm-3">
+      <div class="col-sm-3" *ngIf="isCarSelected()">
         <label for="car-name-{{series.id}}">Car</label>
         <select class="form-control" id="car-name-{{series.id}}" formControlName="carName">
           <option *ngFor="let carName of carNames" [ngValue]="carName">{{carName}}</option>
         </select>
       </div>
       <div class="col-sm-3">
-        <label for="iracing-id-{{series.id}}">iRacing ID</label>
+        <label for="iracing-id-{{series.id}}">Team ID</label>
         <input type="text" id="iracing-id-{{series.id}}" class="form-control" formControlName="iracingId">
       </div>
     </div>
@@ -29,6 +32,12 @@
   <button type="button" class="btn btn-primary mt-2 mb-2" (click)="uploadLivery()">
     <span *ngIf="isUploading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     Upload
+  </button>
+  <input #specUpload type="file" accept=".mip" (click)="specUpload.value = null"(change)="addSpecMap($event)" style="display:none">
+  <button type="button" *ngIf="hasCar() && this.liveryType.value === 'Car'" class="btn btn-primary mt-2 mb-2 ml-2" (click)="specUpload.click()">
+    <span *ngIf="isUploadingSpec" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <span *ngIf="hasSpecMap()">Change Spec Map</span>
+    <span *ngIf="!hasSpecMap()">Add Spec Map</span>
   </button>
   <img [src]="getLiveryPreview()" width="1024px" height="1024px" *ngIf="hasLiveryPreview()" />
 </form>

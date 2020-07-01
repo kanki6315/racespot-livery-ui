@@ -11,6 +11,7 @@ import {NgbAlertModule, NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { VerificationModalComponent } from './verification-modal/verification-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {ErrorModalComponent} from './error-modal/error-modal.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     { provide: HTTP_INTERCEPTORS, useClass: Http401Interceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthHeadersInterceptorService, multi: true }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ErrorModalComponent]
 })
 export class AppModule { }
