@@ -1,4 +1,7 @@
 <form [formGroup]="uploadForm" novalidate xmlns="http://www.w3.org/1999/html">
+  <div class="row" *ngIf="successMessage">
+    <ngb-alert style="display:inline-block;" type="success" (close)="successMessage = ''">{{ successMessage }}</ngb-alert>
+  </div>
   <div class="row" *ngIf="isCarSelected() && priorCar !== null && priorCar.length > 0 && priorCar !== carName.value">
     <ngb-alert type="danger" dismissible="false">If you change your car, you will lose your existing paint. Please ensure you upload a new Spec Map.</ngb-alert>
   </div>

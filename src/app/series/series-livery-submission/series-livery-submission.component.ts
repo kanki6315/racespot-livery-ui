@@ -7,6 +7,8 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {ErrorModalComponent} from '../../error-modal/error-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Team} from '../../models/team';
+import {Subject} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'app-series-livery-submission',
@@ -18,6 +20,8 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   @Input() liveries: Livery[];
   @Input() team: Team;
 
+  private _success = new Subject<string>();
+  successMessage = '';
   isNewTeam = true;
   priorCar = '';
   isUploading = false;
@@ -51,6 +55,11 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     }
 
     this.carNames = this.series.cars.map(c => c.name);
+
+    this._success.subscribe(message => this.successMessage = message);
+    this._success.pipe(
+      debounceTime(7000)
+    ).subscribe(() => this.successMessage = '');
   }
 
   get liveryType(): AbstractControl {
@@ -138,6 +147,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
           this._liveryToUpload = null;
           this._file = null;
           this.isUploading = false;
+          this._success.next(`${finalLivery.liveryType} uploaded successfully!`);
         }, error => {
           const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
           errorComponentInstance.errorMessage = error.error;
@@ -206,6 +216,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
             this.liveries.push(finalLivery);
           }
           this.isUploadingSpec = false;
+          this._success.next(`${finalLivery.liveryType} uploaded successfully!`);
         }, error => {
           const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
           errorComponentInstance.errorMessage = error.error;
