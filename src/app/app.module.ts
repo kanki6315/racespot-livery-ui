@@ -12,6 +12,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { VerificationModalComponent } from './verification-modal/verification-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ErrorModalComponent} from './error-modal/error-modal.component';
+import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,10 @@ import {ErrorModalComponent} from './error-modal/error-modal.component';
     HttpClientModule,
     NgbDropdownModule,
     NgbAlertModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'danger', // set defaults here
+    })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: Http401Interceptor, multi: true },

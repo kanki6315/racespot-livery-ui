@@ -19,6 +19,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   @Input() series: Series;
   @Input() liveries: Livery[];
   @Input() team: Team;
+  @Input() teams: Team[];
 
   private _success = new Subject<string>();
   successMessage = '';
@@ -26,6 +27,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   priorCar = '';
   isUploading = false;
   isUploadingSpec = false;
+  isDeleting = false;
   liveryTypes = ['Car', 'Helmet', 'Suit'];
   carNames = [];
   uploadForm = this._formBuilder.group({
@@ -55,7 +57,10 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     }
 
     this.carNames = this.series.cars.map(c => c.name);
-
+    if (this.carNames.length === 1) {
+      this.uploadForm.patchValue({carName: this.carNames[0]});
+      this.uploadForm.get('carName').disable();
+    }
     this._success.subscribe(message => this.successMessage = message);
     this._success.pipe(
       debounceTime(7000)
@@ -107,8 +112,26 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   }
 
   uploadLivery() {
-    if (this.isUploadingSpec || this._file === null) {
+    if (this.isUploadingSpec || this.isDeleting || this._file === null) {
       return;
+    }
+    if (this.isNewTeam) {
+      const iTeamId = this.iracingId.value;
+      if (iTeamId && iTeamId.length > 0) {
+        const previousTeam = this.teams.findIndex(l => l.iRacingId === iTeamId);
+        if (previousTeam !== -1) {
+          const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+          errorComponentInstance.errorMessage = 'You have already uploaded a paint for this team, please update the existing upload!';
+          const teamIndex = this.teams.filter(l => l === this.team);
+          if (teamIndex.length > 0) {
+            const index = this.teams.indexOf(teamIndex[0], 0);
+            if (index > -1) {
+              this.teams.splice(index, 1);
+            }
+          }
+          return;
+        }
+      }
     }
     this._liveryToUpload = {liveryType: this.liveryType.value, file: this._file, previewUrl: null,
       iTeamId: this.iracingId.value, iTeamName: '', carName: this.carName.value, id: null, uploadUrl: ''};
@@ -125,15 +148,19 @@ export class SeriesLiverySubmissionComponent implements OnInit {
           } else {
             this.liveries.push(finalLivery);
           }
-          if (this.team.name === 'New Team' && !this.team.iRacingId) {
+          if (this.team && this.team.name === 'New Team' && !this.team.iRacingId) {
             this.team.name = finalLivery.iTeamName;
             this.team.iRacingId =  finalLivery.iTeamId;
             this.team.carName =  finalLivery.carName;
+            this.isNewTeam = false;
+            this.uploadForm.get('iracingId').disable();
           }
           if (this.liveryType.value === 'Car') {
             if (this.priorCar !== finalLivery.carName) {
               this.priorCar = finalLivery.carName;
-              this.team.carName = finalLivery.carName;
+              if (this.team) {
+                this.team.carName = finalLivery.carName;
+              }
 
               const specMap = this.liveries.filter(l => l.liveryType === 'Spec Map');
               if (specMap.length > 0) {
@@ -235,5 +262,57 @@ export class SeriesLiverySubmissionComponent implements OnInit {
       this.isUploadingSpec = false;
       // likely validation error before pre-signed url generated
     }));
+  }
+
+  deleteLivery() {
+    if (this.isUploading || this.isUploadingSpec) {
+      return;
+    }
+    const liveryType = this.liveryType.value;
+    const liveriesByType = this.liveries.filter(l => l.liveryType === liveryType);
+    if (liveriesByType.length !== 1) {
+      return;
+    }
+    const livery = liveriesByType[0];
+    this.isDeleting = true;
+    this._liveryService.deleteLivery(livery.id).subscribe((response) => {
+        if (livery.liveryType === 'Car') {
+          const specMap = this.liveries.filter(l => l.liveryType === 'Spec Map');
+          if (specMap.length > 0) {
+            const specIndex = this.liveries.indexOf(specMap[0], 0);
+            if (specIndex > -1) {
+              this.liveries.splice(specIndex, 1);
+            }
+          }
+        }
+        const index = this.liveries.indexOf(livery, 0);
+        if (index > -1) {
+          this.liveries.splice(index, 1);
+        }
+        this.isDeleting = false;
+    }, (error) => {
+      const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+      errorComponentInstance.errorMessage = error.error;
+      this.isDeleting = false;
+    });
+  }
+
+  getDeletionMessage() {
+    const liveryType = this.liveryType.value;
+    const liveriesByType = this.liveries.filter(l => l.liveryType === 'Spec Map');
+    if (liveryType === 'Car' && liveriesByType.length === 1) {
+      return 'Your spec map will also be deleted. Your iRacing default paint will be shown instead.';
+    }
+    return `If deleted, your iRacing default paint will be shown instead.`;
+  }
+
+  getDeletionTitle() {
+    const liveryType = this.liveryType.value;
+    return `Delete your ${liveryType}?`;
+  }
+
+  getDeletionButton() {
+    const liveryType = this.liveryType.value;
+    return `Delete ${liveryType}`;
   }
 }

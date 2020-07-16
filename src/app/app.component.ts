@@ -81,7 +81,7 @@ export class AppComponent implements OnInit, OnDestroy {
               });
             } else {
               localStorage.setItem('key', value);
-              window.location.href = `${this.baseUrl}/api/accounts/google`;
+              window.location.href = `${this.baseUrl}/accounts/google`;
             }
           });
         }

@@ -7,6 +7,7 @@ import { SeriesModalComponent } from './series-modal/series-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { SeriesLiverySubmissionComponent } from './series-livery-submission/series-livery-submission.component';
 import {NgbAccordionModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
+import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
 
 
 
@@ -17,7 +18,8 @@ import {NgbAccordionModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
         SeriesRoutingModule,
         ReactiveFormsModule,
         NgbAccordionModule,
-        NgbAlertModule
+        NgbAlertModule,
+        ConfirmationPopoverModule
     ]
 })
 export class SeriesModule { }

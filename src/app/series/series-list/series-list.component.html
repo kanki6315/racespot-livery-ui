@@ -1,7 +1,16 @@
 <h1 class="mb-3">Series</h1>
 <div class="container-fluid" style="height: calc(100% - 110px);">
-  <div class="row" *ngFor="let series of seriesList | async">
-    <div class="col">
+  <div class="row justify-content-center">
+    <div class="col-sm-6" *ngIf="isLoadingSeries">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <span class="font-weight-bold"> Loading Series</span>
+    </div>
+    <div class="col-sm-6" *ngIf="!isLoadingSeries && seriesList.length === 0">
+      <span class="font-weight-bold">No Active Series Require Paint Submissions</span>
+    </div>
+  </div>
+  <div *ngIf="!isLoadingSeries && seriesList.length !== 0">
+    <div class="row justify-content-center" *ngFor="let series of seriesList">
       <div class="text-center card-deck" id="events">
         <app-series-card [series]="series"></app-series-card>
       </div>

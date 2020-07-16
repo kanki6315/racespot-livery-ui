@@ -8,6 +8,8 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {Livery} from '../../models/livery';
 import {LiveryService} from '../../services/livery.service';
 import {Team} from '../../models/team';
+import {finalize} from 'rxjs/operators';
+import {ErrorModalComponent} from '../../error-modal/error-modal.component';
 
 @Component({
   selector: 'app-series-modal',
@@ -19,8 +21,13 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
   series: Series;
   private _modal: NgbModalRef;
   teamLiveryMap: Map<string, Livery[]> = new Map<string, Livery[]>();
-  liveries: Livery[] = [];
+  liveries: Livery[];
   teams: Team[] = [];
+  carNames = '';
+  helmet: Livery = null;
+  isLoadingLiveries = true;
+  isUploadingHelmet = false;
+  isHoverHelmet = false;
 
   @ViewChild('content', { static: false }) content: ElementRef;
   constructor(
@@ -35,11 +42,18 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this._route.data.subscribe((data: { series: Series }) => {
       this.series = data.series;
+      this.carNames = this.series.cars.map(t => t.name).join(', ');
       this._authenticationService.isVerified().subscribe((isVerified) => {
         if (isVerified) {
-          this._liveryService.getLiveriesBySeriesId(this.series.id).subscribe((liveries) => {
+          this._liveryService.getLiveriesBySeriesId(this.series.id)
+            .pipe(finalize(() => this.isLoadingLiveries = false))
+            .subscribe((liveries) => {
             if (this.series.isTeam) {
               liveries.forEach(t => {
+                if (t.liveryType === 'Helmet' && (!t.iTeamId || t.iTeamId.length === 0)) {
+                  this.helmet = t;
+                  return;
+                }
                 if (this.teamLiveryMap.has(t.iTeamId)) {
                   // @ts-ignore
                   if (t.liveryType === 'Car') {
@@ -82,8 +96,81 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
   }
 
   addTeam(): void {
-    if (this.teams.length === 0 || this.teams.filter(t => t.name === 'New Team' && !t.iRacingId).length === 0) {
+    if (!this.isAddingNewTeam()) {
       this.teams.push({name: 'New Team', iRacingId: '', carName: ''});
     }
+  }
+
+  isAddingNewTeam(): boolean {
+    if (this.teams.length === 0) {
+      return false;
+    }
+    return this.teams.filter(t => t.name === 'New Team' && !t.iRacingId).length !== 0;
+  }
+
+  addHelmet(event: any) {
+    if (event.target.files.length === 0) {
+      console.log('No file selected!');
+      return;
+    }
+    const file: File = event.target.files[0];
+    this.isUploadingHelmet = true;
+    const livery = {liveryType: 'Helmet', file: file, previewUrl: null,
+      iTeamId: '', iTeamName: '', carName: '', id: null, uploadUrl: ''};
+
+    this._liveryService.getPresignedUrl(this.series.id, livery, '').subscribe((returnLivery) => {
+      this._liveryService.upload(livery.file, returnLivery.uploadUrl).subscribe((response) => {
+        this._liveryService.finalizeUpload(returnLivery.id).subscribe((finalLivery) => {
+          const previousLiveryIndex = this.liveries.findIndex(l => l.id === finalLivery.id);
+          if (previousLiveryIndex !== -1) {
+            this.liveries[previousLiveryIndex] = finalLivery;
+          } else {
+            this.liveries.push(finalLivery);
+          }
+          this.helmet = finalLivery;
+          this.isUploadingHelmet = false;
+          // this._success.next(`${finalLivery.liveryType} uploaded successfully!`);
+        }, error => {
+          const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+          errorComponentInstance.errorMessage = error.error;
+          this.isUploadingHelmet = false;
+          // likely an error converting tga to png, invalid file
+        });
+      }, (error => {
+        const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+        errorComponentInstance.errorMessage = error.error;
+        this.isUploadingHelmet = false;
+        // likely error uploading to S3, should NEVER occur
+      }));
+    }, (error => {
+      const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+      errorComponentInstance.errorMessage = error.error;
+      this.isUploadingHelmet = false;
+      // likely validation error before pre-signed url generated
+    }));
+  }
+
+  deleteHelmet() {
+    if (this.isUploadingHelmet) {
+      return;
+    }
+
+    this.isUploadingHelmet = true;
+    this._liveryService.deleteLivery(this.helmet.id).subscribe((response) => {
+      const index = this.liveries.indexOf(this.helmet, 0);
+      if (index > -1) {
+        this.liveries.splice(index, 1);
+      }
+      this.helmet = null;
+      this.isUploadingHelmet = false;
+    }, (error) => {
+      const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+      errorComponentInstance.errorMessage = error.error;
+      this.isUploadingHelmet = false;
+    });
+  }
+
+  getHelmetPreview() {
+    return this.helmet.previewUrl;
   }
 }

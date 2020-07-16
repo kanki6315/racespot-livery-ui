@@ -8,15 +8,15 @@ import {Livery} from '../models/livery';
   providedIn: 'root'
 })
 export class SeriesService {
-  private _baseUrl = 'https://4bvauc5gjl.execute-api.us-east-2.amazonaws.com/Prod';
+  private _baseUrl = 'https://api.racespot.media';
 
   constructor(private _http: HttpClient) { }
 
   getAllSeries(): Observable<Series[]> {
-    return this._http.get<Series[]>(`${this._baseUrl}/api/series`);
+    return this._http.get<Series[]>(`${this._baseUrl}/series`);
   }
 
   getById(seriesId: string): Observable<Series> {
-    return this._http.get<Series>(`${this._baseUrl}/api/series/${seriesId}`);
+    return this._http.get<Series>(`${this._baseUrl}/series/${seriesId}`);
   }
 }

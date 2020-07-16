@@ -9,7 +9,7 @@
   <div class="profile">
     <button class="btn btn-outline-dark mr-2" *ngIf="(isAuthenticated | async) && !(isVerified | async) && (canSendVerification | async)" [routerLink]="'/verify'">Verify iRacing Account</button>
     <button class="btn btn-outline-dark mr-2" *ngIf="(isAuthenticated | async) && !(isVerified | async) && !(canSendVerification | async)" disabled="true">Pending iRacing Verification</button>
-    <a class="btn btn-dark" *ngIf="!(isAuthenticated | async)" href="{{baseUrl}}/api/accounts/google" role="button">
+    <a class="btn btn-dark" *ngIf="!(isAuthenticated | async)" href="{{baseUrl}}/accounts/google" role="button">
       Log in with Google
     </a>
     <ul class="navbar-nav" *ngIf="isAuthenticated | async">

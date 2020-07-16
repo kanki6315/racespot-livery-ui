@@ -34,6 +34,10 @@ export class VerificationModalComponent implements OnInit, AfterViewInit {
       this._authenticationService.setLastInviteDate();
       this.isUploading = false;
       this.backToSeriesList();
+      this.isUploading = false;
+      const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+      errorComponentInstance.errorMessage = 'Please visit <a href="https://members.iracing.com/jforum/pm/inbox.page">https://members.iracing.com/jforum/pm/inbox.page</a> to proceed verifying your account!';
+      errorComponentInstance.title = 'Success!';
     }, (error => {
       this.isUploading = false;
       const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;

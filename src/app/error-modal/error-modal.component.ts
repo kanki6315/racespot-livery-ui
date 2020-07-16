@@ -8,7 +8,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ErrorModalComponent {
   @Input() errorMessage: string;
-
-  constructor(public activeModal: NgbActiveModal) { }
-
+  @Input() title: string;
+  constructor(public activeModal: NgbActiveModal) {
+    this.title = 'Error';
+  }
 }

@@ -18,7 +18,7 @@ export class AuthenticationService {
   }
   private userUpdateSubject = new Subject<User>();
   private helper = new JwtHelperService();
-  public _baseUrl = 'https://4bvauc5gjl.execute-api.us-east-2.amazonaws.com/Prod';
+  public _baseUrl = 'https://api.racespot.media';
   private tokenSubject = new ReplaySubject<string | null>(1);
   public token = this.tokenSubject.asObservable().pipe(
     startWith(localStorage.getItem('token')),
@@ -35,7 +35,7 @@ export class AuthenticationService {
 
   private getUser(): Observable<User | null> {
     if (this._getUserObservable === null) {
-      this._getUserObservable = this.http.get<User>(`${this._baseUrl}/api/users/me`)
+      this._getUserObservable = this.http.get<User>(`${this._baseUrl}/users/me`)
         .pipe(
           publishReplay(),
           refCount(),
@@ -105,7 +105,7 @@ export class AuthenticationService {
   }
 
   public logout(): void {
-    this.http.post(`${this._baseUrl}/api/accounts/logout`, null)
+    this.http.post(`${this._baseUrl}/accounts/logout`, null)
       .subscribe(() => {
           this.clearAuth();
           this.router.navigateByUrl('/');
@@ -143,11 +143,11 @@ export class AuthenticationService {
   }
 
   sendVerificationMessage(iracingId: string): Observable<any> {
-    return this.http.post<any>(`${this._baseUrl}/api/accounts/send-iracing-verification`, {iracingId: iracingId});
+    return this.http.post<any>(`${this._baseUrl}/accounts/send-iracing-verification`, {iracingId: iracingId});
   }
 
   finalizeVerificationMessage(key: string): Observable<User> {
-    return this.http.post<User>(`${this._baseUrl}/api/accounts/iracing-verification`, {key: key});
+    return this.http.post<User>(`${this._baseUrl}/accounts/iracing-verification`, {key: key});
   }
 
   setIracingId(user: User) {

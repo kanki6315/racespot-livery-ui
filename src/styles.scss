@@ -62,3 +62,36 @@ textarea:focus {
 
 $enable-validation-icons: false;
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+.btn-primary,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus,
+.btn-primary:active:focus,{
+  background-color: #ffd200;
+  border-color: transparent;
+  color: #000000;
+}
+
+.btn-primary:hover {
+  background-color: #DEB700;
+  border-color: transparent;
+  color: #000000;
+}
+
+.btn-primary:disabled {
+  background-color: #FFE676;
+  border-color: transparent;
+  color: #000000;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box img {
+  width: 100px;
+  height: 100px;
+}

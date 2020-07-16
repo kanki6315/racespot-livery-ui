@@ -6,30 +6,51 @@
     </button>
   </div>
   <div class="modal-body">
-    <div class="row">
+    <div class="row" *ngIf="carNames.indexOf(',') !== carNames.lastIndexOf(',')">
       <div class="col">
-        <span class="font-weight-bold">Cars: </span><span *ngFor="let car of series.cars">{{car.name}}, </span>
+        <span class="font-weight-bold">Cars: </span> {{carNames}}
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-6" *ngIf="teams.length === 0 && series.isTeam">
+      <div class="col-sm-6" *ngIf="isLoadingLiveries">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span class="font-weight-bold"> Loading Liveries</span>
+      </div>
+      <div class="col-sm-6" *ngIf="!isLoadingLiveries && teams.length === 0 && series.isTeam">
         <span class="font-weight-bold">No Liveries Uploaded for Series</span>
       </div>
-      <div class="col" *ngIf="teams.length !== 0 && series.isTeam">
+      <div class="col" *ngIf="series.isTeam && liveries && teams.length !== 0">
         <ngb-accordion activeIds="ngb-panel-0">
           <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}} - {{team.carName}}">
             <ng-template ngbPanelContent>
-              <app-series-livery-submission [series]="series" [liveries]="teamLiveryMap.get(team.iRacingId) || []" [team]="team"></app-series-livery-submission>
+              <app-series-livery-submission [series]="series" [liveries]="teamLiveryMap.get(team.iRacingId) || []" [team]="team" [teams]="teams"></app-series-livery-submission>
             </ng-template>
           </ngb-panel>
         </ngb-accordion>
       </div>
-      <div class="col" *ngIf="liveries.length !== 0 && !series.isTeam">
+      <div class="col" *ngIf="!series.isTeam && liveries">
             <app-series-livery-submission [series]="series" [liveries]="liveries || []"></app-series-livery-submission>
       </div>
     </div>
   </div>
   <div class="modal-footer" *ngIf="series.isTeam">
-    <button type="button" class="btn btn-primary" (click)="addTeam()">Add Team</button>
+    <input #helmetUpload type="file" accept=".tga" (click)="helmetUpload.value = null"(change)="addHelmet($event)" style="display:none">
+    <button *ngIf="!helmet" type="button" class="btn btn-primary mt-2 mb-2 ml-2" (click)="helmetUpload.click()">
+      <span *ngIf="isUploadingHelmet" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Add Personal Helmet
+    </button>
+    <button *ngIf="helmet" (mouseover)="isHoverHelmet=true" (mouseout)="isHoverHelmet=false" type="button" class="btn btn-danger mt-2 mb-2" mwlConfirmationPopover
+            popoverTitle="Delete your Helmet?"
+            popoverMessage="Your iRacing default helmet will be shown"
+            confirmText="Delete"
+            placement="left"
+            (confirm)="deleteHelmet()">
+      <span *ngIf="isUploadingHelmet" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Delete Personal Helmet
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="isAddingNewTeam()" (click)="addTeam()">Add Team</button>
+  </div>
+  <div class="modal-footer box" *ngIf="isHoverHelmet">
+    <img class="img-thumbnail h-50 w-50 d-inline-block align-items-center justify-content-center" [src]="getHelmetPreview()"/>
   </div>
 </ng-template>
