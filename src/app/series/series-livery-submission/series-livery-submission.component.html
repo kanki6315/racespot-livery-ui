@@ -54,6 +54,9 @@
     <span *ngIf="isDeleting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     Delete
   </button>
+  <p *ngIf="isUploading || isUploadingSpec || isDeleting">
+    <ngb-progressbar type="success" textType="white" [value]="uploadProgress"></ngb-progressbar>
+  </p>
   <div class="row box" *ngIf="hasLiveryPreview()">
     <img class="img-thumbnail h-75 w-75 align-content-center" [src]="getLiveryPreview()"/>
   </div>

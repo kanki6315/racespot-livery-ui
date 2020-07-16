@@ -38,6 +38,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   });
   private _file: File | null = null;
   private _liveryToUpload: Livery | null = null;
+  uploadProgress = 0;
 
   constructor(private _liveryService: LiveryService,
               private _formBuilder: FormBuilder,
@@ -137,11 +138,15 @@ export class SeriesLiverySubmissionComponent implements OnInit {
       iTeamId: this.iracingId.value, iTeamName: '', carName: this.carName.value, id: null, uploadUrl: ''};
     const carId = this.isCarSelected() ? this.series.cars.filter(c => c.name === this._liveryToUpload.carName)[0].id : '';
 
+    this.uploadProgress = 10;
     this.isUploading = true;
 
     this._liveryService.getPresignedUrl(this.series.id, this._liveryToUpload, carId).subscribe((returnLivery) => {
+      this.uploadProgress = 40;
       this._liveryService.upload(this._liveryToUpload.file, returnLivery.uploadUrl).subscribe((response) => {
+        this.uploadProgress = 80;
         this._liveryService.finalizeUpload(returnLivery.id).subscribe((finalLivery) => {
+          this.uploadProgress = 100;
           const previousLiveryIndex = this.liveries.findIndex(l => l.id === finalLivery.id);
           if (previousLiveryIndex !== -1) {
             this.liveries[previousLiveryIndex] = finalLivery;
@@ -173,8 +178,8 @@ export class SeriesLiverySubmissionComponent implements OnInit {
           }
           this._liveryToUpload = null;
           this._file = null;
-          this.isUploading = false;
           this._success.next(`${finalLivery.liveryType} uploaded successfully!`);
+          this.isUploading = false;
         }, error => {
           const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
           errorComponentInstance.errorMessage = error.error;
@@ -227,6 +232,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
       return;
     }
     const file: File = event.target.files[0];
+    this.uploadProgress = 10;
     this.isUploadingSpec = true;
     const carLivery = this.liveries.filter(l => l.liveryType === 'Car')[0];
     this._liveryToUpload = {liveryType: 'Spec Map', file: file, previewUrl: null,
@@ -234,8 +240,11 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     const carId = this.series.cars.filter(c => c.name === carLivery.carName)[0].id;
 
     this._liveryService.getPresignedUrl(this.series.id, this._liveryToUpload, carId).subscribe((returnLivery) => {
+      this.uploadProgress = 40;
       this._liveryService.upload(this._liveryToUpload.file, returnLivery.uploadUrl).subscribe((response) => {
+        this.uploadProgress = 80;
         this._liveryService.finalizeUpload(returnLivery.id).subscribe((finalLivery) => {
+          this.uploadProgress = 100;
           const previousLiveryIndex = this.liveries.findIndex(l => l.id === finalLivery.id);
           if (previousLiveryIndex !== -1) {
             this.liveries[previousLiveryIndex] = finalLivery;
@@ -274,8 +283,10 @@ export class SeriesLiverySubmissionComponent implements OnInit {
       return;
     }
     const livery = liveriesByType[0];
+    this.uploadProgress = 50;
     this.isDeleting = true;
     this._liveryService.deleteLivery(livery.id).subscribe((response) => {
+      this.uploadProgress = 100;
         if (livery.liveryType === 'Car') {
           const specMap = this.liveries.filter(l => l.liveryType === 'Spec Map');
           if (specMap.length > 0) {

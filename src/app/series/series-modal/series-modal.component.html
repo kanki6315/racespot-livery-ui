@@ -50,6 +50,11 @@
     </button>
     <button type="button" class="btn btn-primary" [disabled]="isAddingNewTeam()" (click)="addTeam()">Add Team</button>
   </div>
+  <div class="modal-footer" *ngIf="isUploadingHelmet">
+    <p style="float: left; width: 100%">
+      <ngb-progressbar type="success" textType="white" [value]="uploadProgress"></ngb-progressbar>
+    </p>
+  </div>
   <div class="modal-footer box" *ngIf="isHoverHelmet">
     <img class="img-thumbnail h-50 w-50 d-inline-block align-items-center justify-content-center" [src]="getHelmetPreview()"/>
   </div>

@@ -30,6 +30,7 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
   isHoverHelmet = false;
 
   @ViewChild('content', { static: false }) content: ElementRef;
+  uploadProgress = 0;
   constructor(
     private _route: ActivatedRoute,
     private _formBuilder: FormBuilder,
@@ -114,13 +115,17 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
       return;
     }
     const file: File = event.target.files[0];
+    this.uploadProgress = 10;
     this.isUploadingHelmet = true;
     const livery = {liveryType: 'Helmet', file: file, previewUrl: null,
       iTeamId: '', iTeamName: '', carName: '', id: null, uploadUrl: ''};
 
     this._liveryService.getPresignedUrl(this.series.id, livery, '').subscribe((returnLivery) => {
+      this.uploadProgress = 40;
       this._liveryService.upload(livery.file, returnLivery.uploadUrl).subscribe((response) => {
+        this.uploadProgress = 80;
         this._liveryService.finalizeUpload(returnLivery.id).subscribe((finalLivery) => {
+          this.uploadProgress = 100;
           const previousLiveryIndex = this.liveries.findIndex(l => l.id === finalLivery.id);
           if (previousLiveryIndex !== -1) {
             this.liveries[previousLiveryIndex] = finalLivery;
@@ -155,8 +160,10 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    this.uploadProgress = 50;
     this.isUploadingHelmet = true;
     this._liveryService.deleteLivery(this.helmet.id).subscribe((response) => {
+      this.uploadProgress = 100;
       const index = this.liveries.indexOf(this.helmet, 0);
       if (index > -1) {
         this.liveries.splice(index, 1);
