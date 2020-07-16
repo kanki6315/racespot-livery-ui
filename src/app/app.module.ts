@@ -7,7 +7,7 @@ import { SeriesComponent } from './series/series.component';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {Http401Interceptor} from './interceptors/http401.interceptor';
 import {AuthHeadersInterceptorService} from './interceptors/auth-headers.interceptor';
-import {NgbAlertModule, NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbAlertModule, NgbDropdownModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { VerificationModalComponent } from './verification-modal/verification-modal.component';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -30,7 +30,8 @@ import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
     ReactiveFormsModule,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger', // set defaults here
-    })
+    }),
+    NgbTooltipModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: Http401Interceptor, multi: true },
