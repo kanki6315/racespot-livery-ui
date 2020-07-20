@@ -13,12 +13,14 @@ import { VerificationModalComponent } from './verification-modal/verification-mo
 import {ReactiveFormsModule} from '@angular/forms';
 import {ErrorModalComponent} from './error-modal/error-modal.component';
 import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
+import { PrivacyPolicyModalComponent } from './privacy-policy-modal/privacy-policy-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SeriesComponent,
-    VerificationModalComponent
+    VerificationModalComponent,
+    PrivacyPolicyModalComponent
   ],
   imports: [
     BrowserModule,
