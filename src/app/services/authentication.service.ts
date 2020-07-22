@@ -6,6 +6,7 @@ import {User} from '../models/user';
 import {catchError, map, merge, publishReplay, refCount, startWith, tap} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {Livery} from '../models/livery';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class AuthenticationService {
   }
   private userUpdateSubject = new Subject<User>();
   private helper = new JwtHelperService();
-  public _baseUrl = 'https://api.racespot.media';
+  private _baseUrl = environment.baseUrl;
   private tokenSubject = new ReplaySubject<string | null>(1);
   public token = this.tokenSubject.asObservable().pipe(
     startWith(localStorage.getItem('token')),

@@ -3,12 +3,13 @@ import {HttpClient} from '@angular/common/http';
 import {Series} from '../models/series';
 import {Observable} from 'rxjs';
 import {Livery} from '../models/livery';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SeriesService {
-  private _baseUrl = 'https://api.racespot.media';
+  private _baseUrl = environment.baseUrl;
 
   constructor(private _http: HttpClient) { }
 
