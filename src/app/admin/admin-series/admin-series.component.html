@@ -1,1 +1,23 @@
-<p>admin-series works!</p>
+<button type="button" class="btn btn-primary" [routerLink]="['create']" style="float: right">Add Series</button>
+<table class="table table-striped table-hover">
+  <thead>
+  <tr>
+    <th scope="col" style="width: 30%">Name</th>
+    <th scope="col" style="width: 40%">Description</th>
+    <th scope="col" style="width: 15%">Last Updated</th>
+    <th scope="col" style="width: 15%">Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let series of allSeries | async">
+    <td [ngClass]="isArchived(series)">
+      <img [src]="series.logoImgUrl" class="mr-2" style="width: 45px">
+      {{ series.name }}
+    </td>
+    <td style="font-size: 13px; text-align: center">{{series.description}}</td>
+    <td>{{ series.lastUpdated | date }}</td>
+    <td><div style="text-align:center"><button type="button" class="btn btn-primary" [routerLink]="[series.id]">Edit Series</button></div></td>
+  </tr>
+  </tbody>
+</table>
+<router-outlet></router-outlet>

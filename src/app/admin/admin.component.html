@@ -1,5 +1,5 @@
 <!-- your navs bound to current route fragments -->
-<ul ngbNav [activeId]="active" class="nav-pills">
+<ul ngbNav [activeId]="activeTab" class="nav-pills">
   <li [ngbNavItem]="link.fragment" *ngFor="let link of links">
     <a ngbNavLink (click)="changeActiveTab(link)" >{{ link.title }}</a>
   </li>

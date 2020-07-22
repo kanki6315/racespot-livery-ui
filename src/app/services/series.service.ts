@@ -20,4 +20,16 @@ export class SeriesService {
   getById(seriesId: string): Observable<Series> {
     return this._http.get<Series>(`${this._baseUrl}/series/${seriesId}`);
   }
+
+  getAdminSeries(): Observable<Series[]> {
+    return this._http.get<Series[]>(`${this._baseUrl}/series?showArchived=true`);
+  }
+
+  postSeries(series: Series): Observable<Series> {
+    return this._http.post<Series>(`${this._baseUrl}/series`, series);
+  }
+
+  putSeries(series: Series): Observable<Series> {
+    return this._http.put<Series>(`${this._baseUrl}/series/${series.id}`, series);
+  }
 }

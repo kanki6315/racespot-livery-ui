@@ -11,16 +11,16 @@ export class AdminComponent implements OnInit {
     { title: 'Series', fragment: 'series' },
     { title: 'Users', fragment: 'users' }
   ];
-  active = 'series';
-  constructor(public route: ActivatedRoute,
+  activeTab = 'series';
+  constructor(
               public router: Router) { }
 
   ngOnInit(): void {
-    this.router.navigateByUrl('admin/' + this.active);
+    this.router.navigateByUrl('admin/' + this.activeTab);
   }
 
-  changeActiveTab(link: {fragment: string; title: string} | {fragment: string; title: string}) {
-    this.active = link.fragment;
+  changeActiveTab(link: {fragment: string; title: string}) {
+    this.activeTab = link.fragment;
     this.router.navigateByUrl('admin/' + link.fragment);
   }
 }

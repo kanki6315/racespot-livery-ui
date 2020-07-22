@@ -1,0 +1,103 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <div *ngIf="this.series">
+      <img [src]="this.series.logoImgUrl" alt="Logo" width="50">
+    </div>
+    <h4 class="modal-title">Edit Series</h4>
+    <button type="button" class="close" (click)="modal.dismiss()">
+      <span>&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="seriesForm" novalidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+            <label for="name" placement="top" ngbTooltip="Enter series name">
+              Series Name
+            </label>
+            <input type="text" id="name" class="form-control" formControlName="name" placement="bottom"
+                   ngbTooltip="Enter series name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+            <label for="description" placement="top" ngbTooltip="Enter series description">
+              Series Description
+            </label>
+            <textarea rows="3" id="description" class="form-control" formControlName="description" placement="bottom"
+                      ngbTooltip="Enter series description"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+            <label for="logoUrl" placement="top" ngbTooltip="Enter series logo url">
+              Series Logo Url
+            </label>
+            <input type="text" id="logoUrl" class="form-control" formControlName="logoUrl" placement="bottom"
+                   ngbTooltip="Enter series logo url">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="isTeam" formControlName="isTeam">
+            <label class="form-check-label" for="isTeam">
+              Team Series?
+            </label>
+          </div>
+          <div class="form-group form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="isArchived" formControlName="isArchived">
+            <label class="form-check-label" for="isArchived">
+              Archive Series?
+            </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <table *ngIf="this.series" class="table table-striped table-hover">
+            <thead>
+            <tr>
+              <th scope="col" style="width: 85%;text-align: center">Car Name</th>
+              <th scope="col" *ngIf="this.series.cars.length > 1" style="width: 15%">Remove</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let car of this.series.cars">
+              <td style="text-align: center">{{car.name}}</td>
+              <td *ngIf="this.series.cars.length > 1">
+                <button class="btn btn-outline-dark mr-2" (click)="removeCar(car)">
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
+                    <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-auto" >
+            <select class="form-control" id="newCar" formControlName="newCar">
+              <option *ngFor="let car of this.carList"[value]="car.id">{{car.name}}</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-outline-dark" (click)="addCar()">Add Car</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="this.backToAdminPage()" class="btn btn-info" [disabled]="isSubmitting">
+        Cancel
+      </button>
+      <button (click)="updateSeries()" class="btn btn-primary" [disabled]="isSubmitting" placement="bottom"
+              ngbTooltip="Once submitted, protests cannot be edited!">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+        Submit
+      </button>
+    </div>
+  </form>
+</ng-template>
