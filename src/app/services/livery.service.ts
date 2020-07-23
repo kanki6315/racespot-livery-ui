@@ -15,6 +15,10 @@ export class LiveryService {
     return this._http.get<Livery[]>(`${this._baseUrl}/series/${seriesId}/liveries`);
   }
 
+  getAdminLiveriesBySeriesId(seriesId: string): Observable<Livery[]> {
+    return this._http.get<Livery[]>(`${this._baseUrl}/series/${seriesId}/liveries?showAll=true`);
+  }
+
   finalizeUpload(liveryId: string): Observable<Livery> {
     return this._http.post<Livery>(`${this._baseUrl}/liveries/${liveryId}/finalize`, null);
   }

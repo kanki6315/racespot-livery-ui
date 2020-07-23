@@ -12,15 +12,18 @@ import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
 
 
 @NgModule({
-  declarations: [SeriesListComponent, SeriesCardComponent, SeriesModalComponent, SeriesLiverySubmissionComponent],
-  imports: [
-    CommonModule,
-    SeriesRoutingModule,
-    ReactiveFormsModule,
-    NgbAccordionModule,
-    NgbAlertModule,
-    ConfirmationPopoverModule,
-    NgbProgressbarModule
-  ]
+    declarations: [SeriesListComponent, SeriesCardComponent, SeriesModalComponent, SeriesLiverySubmissionComponent],
+    exports: [
+        SeriesLiverySubmissionComponent
+    ],
+    imports: [
+        CommonModule,
+        SeriesRoutingModule,
+        ReactiveFormsModule,
+        NgbAccordionModule,
+        NgbAlertModule,
+        ConfirmationPopoverModule,
+        NgbProgressbarModule
+    ]
 })
 export class SeriesModule { }

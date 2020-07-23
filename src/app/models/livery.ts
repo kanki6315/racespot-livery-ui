@@ -7,4 +7,7 @@ export class Livery {
   file: File;
   previewUrl: string | null;
   uploadUrl: string | null;
+  userId: string;
+  firstName: string | null;
+  lastName: string | null;
 }

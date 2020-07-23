@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {AdminComponent} from './admin.component';
 import {AdminSeriesComponent} from './admin-series/admin-series.component';
-import {AdminUsersComponent} from './admin-users/admin-users.component';
+import {AdminLiveriesComponent} from './admin-liveries/admin-liveries.component';
 import {AdminSeriesCreateModalComponent} from './admin-series-create-modal/admin-series-create-modal.component';
 import {SeriesModalComponent} from '../series/series-modal/series-modal.component';
 import {SeriesResolverService} from '../series/series-resolver.service';
@@ -32,8 +32,8 @@ const appRoutes: Routes = [
         ]
       },
       {
-        path: 'users',
-        component: AdminUsersComponent
+        path: 'liveries',
+        component: AdminLiveriesComponent
       }
     ]
   }

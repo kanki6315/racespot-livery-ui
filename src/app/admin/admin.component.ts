@@ -9,9 +9,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class AdminComponent implements OnInit {
   links = [
     { title: 'Series', fragment: 'series' },
-    { title: 'Users', fragment: 'users' }
+    { title: 'Liveries', fragment: 'liveries' }
   ];
-  activeTab = 'series';
+  activeTab = 'liveries';
   constructor(
               public router: Router) { }
 

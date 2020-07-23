@@ -25,27 +25,27 @@
       </div>
     </div>
   </div>
-  <div class="custom-file">
+  <div class="custom-file" *ngIf="isEditable">
     <input type="file" accept=".tga" class="custom-file-input" id="livery-{{series.id}}"
            formControlName="liveryFile" (change)="onFileAdded($event)">
     <label class="custom-file-label" for="livery-{{series.id}}">
       {{ getLiveryFileName() || 'Choose livery' }}
     </label>
   </div>
-  <button type="button" class="btn btn-primary mt-2 mb-2" (click)="uploadLivery()">
+  <button *ngIf="isEditable" type="button" class="btn btn-primary mt-2 mb-2" (click)="uploadLivery()">
     <span *ngIf="isUploading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     <span *ngIf="isUploading"> </span>
     <span *ngIf="!hasLiveryPreview()">Upload</span>
     <span *ngIf="hasLiveryPreview()">Update</span>
   </button>
   <input #specUpload type="file" accept=".mip" (click)="specUpload.value = null"(change)="addSpecMap($event)" style="display:none">
-  <button type="button" *ngIf="hasCar() && this.liveryType.value === 'Car'" class="btn btn-primary mt-2 mb-2 ml-2" (click)="specUpload.click()">
+  <button type="button" *ngIf="isEditable && hasCar() && this.liveryType.value === 'Car'" class="btn btn-primary mt-2 mb-2 ml-2" (click)="specUpload.click()">
     <span *ngIf="isUploadingSpec" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     <span *ngIf="isUploadingSpec"> </span>
     <span *ngIf="hasSpecMap()">Change Spec Map</span>
     <span *ngIf="!hasSpecMap()">Add Spec Map</span>
   </button>
-  <button *ngIf="hasLiveryPreview()" type="button" class="btn btn-danger mt-2 mb-2" style="float: right;"  mwlConfirmationPopover
+  <button *ngIf="isEditable && hasLiveryPreview()" type="button" class="btn btn-danger mt-2 mb-2" style="float: right;"  mwlConfirmationPopover
           [popoverTitle]="getDeletionTitle()"
           [popoverMessage]="getDeletionMessage()"
           [confirmText]="getDeletionButton()"

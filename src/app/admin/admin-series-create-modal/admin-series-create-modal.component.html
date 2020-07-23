@@ -52,7 +52,7 @@
         <div class="form-row">
           <div class="form-group">
             <label for="cars">Car Select</label>
-            <select multiple class="form-control" id="cars" [formControl]="seriesForm.controls.cars">
+            <select multiple class="form-control" id="cars" [formControl]="seriesForm.controls.cars" size="20">
               <option *ngFor='let car of carList | async' [value]="car.id">
                 {{car.name}}
               </option>

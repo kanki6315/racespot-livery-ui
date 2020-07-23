@@ -23,13 +23,13 @@
         <ngb-accordion activeIds="ngb-panel-0">
           <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}} - {{team.carName}}">
             <ng-template ngbPanelContent>
-              <app-series-livery-submission [series]="series" [liveries]="teamLiveryMap.get(team.iRacingId) || []" [team]="team" [teams]="teams"></app-series-livery-submission>
+              <app-series-livery-submission [series]="series" [liveries]="teamLiveryMap.get(team.iRacingId) || []" [isEditable]="true" [team]="team" [teams]="teams"></app-series-livery-submission>
             </ng-template>
           </ngb-panel>
         </ngb-accordion>
       </div>
       <div class="col" *ngIf="!series.isTeam && liveries">
-            <app-series-livery-submission [series]="series" [liveries]="liveries || []"></app-series-livery-submission>
+            <app-series-livery-submission [series]="series" [liveries]="liveries || []" [isEditable]="true"></app-series-livery-submission>
       </div>
     </div>
   </div>

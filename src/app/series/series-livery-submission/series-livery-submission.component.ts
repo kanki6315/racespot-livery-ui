@@ -20,6 +20,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   @Input() liveries: Livery[];
   @Input() team: Team;
   @Input() teams: Team[];
+  @Input() isEditable: boolean;
 
   private _success = new Subject<string>();
   successMessage = '';
@@ -57,15 +58,21 @@ export class SeriesLiverySubmissionComponent implements OnInit {
       this.uploadForm.get('iracingId').disable();
     }
 
-    this.carNames = this.series.cars.map(c => c.name);
-    if (this.carNames.length === 1) {
-      this.uploadForm.patchValue({carName: this.carNames[0]});
-      this.uploadForm.get('carName').disable();
+    if (this.series.cars) {
+      this.carNames = this.series.cars.map(c => c.name);
+      if (this.carNames.length === 1) {
+        this.uploadForm.patchValue({carName: this.carNames[0]});
+        this.uploadForm.get('carName').disable();
+      }
     }
     this._success.subscribe(message => this.successMessage = message);
     this._success.pipe(
       debounceTime(7000)
     ).subscribe(() => this.successMessage = '');
+
+    if (!this.isEditable) {
+      this.uploadForm.get('carName').disable();
+    }
   }
 
   get liveryType(): AbstractControl {
@@ -135,7 +142,8 @@ export class SeriesLiverySubmissionComponent implements OnInit {
       }
     }
     this._liveryToUpload = {liveryType: this.liveryType.value, file: this._file, previewUrl: null,
-      iTeamId: this.iracingId.value, iTeamName: '', carName: this.carName.value, id: null, uploadUrl: ''};
+      iTeamId: this.iracingId.value, iTeamName: '', carName: this.carName.value, id: null, uploadUrl: '',
+      userId: '', firstName: '', lastName: ''};
     const carId = this.isCarSelected() ? this.series.cars.filter(c => c.name === this._liveryToUpload.carName)[0].id : '';
 
     this.uploadProgress = 10;
@@ -236,7 +244,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     this.isUploadingSpec = true;
     const carLivery = this.liveries.filter(l => l.liveryType === 'Car')[0];
     this._liveryToUpload = {liveryType: 'Spec Map', file: file, previewUrl: null,
-      iTeamId: carLivery.iTeamId, iTeamName: '', carName: carLivery.carName, id: null, uploadUrl: ''};
+      iTeamId: carLivery.iTeamId, iTeamName: '', carName: carLivery.carName, id: null, uploadUrl: '', userId: '', firstName: '', lastName: ''};
     const carId = this.series.cars.filter(c => c.name === carLivery.carName)[0].id;
 
     this._liveryService.getPresignedUrl(this.series.id, this._liveryToUpload, carId).subscribe((returnLivery) => {

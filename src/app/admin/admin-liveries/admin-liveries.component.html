@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col">
+    <div ngbDropdown class="d-inline-block d-flex justify-content-end">
+      <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
+        <span *ngIf="!selectedSeries">Active Series</span>
+        <span *ngIf="selectedSeries">{{selectedSeries.name}}</span>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button ngbDropdownItem *ngFor="let series of allSeries | async" (click)="changeSeries(series)"> {{series.name}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="!selectedSeries">
+  <h3>Please select a series!</h3>
+</div>
+<div class="row" *ngIf="selectedSeries">
+  <div class="col-sm-6" *ngIf="isLoadingLiveries">
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <span class="font-weight-bold"> Loading Liveries</span>
+  </div>
+  <div class="col-sm-6" *ngIf="!isLoadingLiveries && idLiveryMap.size === 0">
+    <span class="font-weight-bold">No Liveries Uploaded for Series</span>
+  </div>
+  <div class="col" *ngIf="selectedSeries.isTeam && liveries && teams.length !== 0">
+    <ngb-accordion activeIds="ngb-panel-0">
+      <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}} - {{team.carName}}">
+        <ng-template ngbPanelContent>
+          <app-series-livery-submission [series]="selectedSeries" [liveries]="idLiveryMap.get(team.iRacingId) || []" [team]="team" [teams]="teams"></app-series-livery-submission>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+  </div>
+  <div class="col" *ngIf="!selectedSeries.isTeam && liveries && users.length !== 0">
+    <ngb-accordion activeIds="ngb-panel-0">
+      <ngb-panel *ngFor="let user of users; index as i" title="{{user.firstName}} {{user.lastName}}">
+        <ng-template ngbPanelContent>
+          <app-series-livery-submission [series]="selectedSeries" [liveries]="idLiveryMap.get(user.userId) || []"></app-series-livery-submission>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+  </div>
+</div>
