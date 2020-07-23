@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
 import {ErrorModalComponent} from './error-modal/error-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {environment} from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 export class AppComponent implements OnInit, OnDestroy {
   public defaultAlertMessage = 'User is not verified';
 
-  public baseUrl = this.authenticationService._baseUrl;
+  public baseUrl = environment.baseUrl;
   public isAuthenticated = this.authenticationService.isAuthenticated();
   public isVerified = this.authenticationService.isVerified();
   public canSendVerification = this.authenticationService.canSendVerificationMessage();
@@ -48,6 +49,9 @@ export class AppComponent implements OnInit, OnDestroy {
         filter(f => Boolean(f)),
       )
       .subscribe((fragment: string) => {
+        if (fragment.indexOf('=') === -1) {
+          return;
+        }
         const key = fragment.substring(0, fragment.indexOf('='));
         const value = fragment.substring(fragment.indexOf('=') + 1);
         if (key === 'token') {

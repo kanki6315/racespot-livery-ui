@@ -1,0 +1,73 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Create Series</h4>
+    <button type="button" class="close" (click)="modal.dismiss()">
+      <span>&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="seriesForm" (ngSubmit)="createSeries()" novalidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+            <label for="name" placement="top" ngbTooltip="Enter series name">
+                Series Name
+              </label>
+              <input type="text" id="name" class="form-control" formControlName="name" placement="bottom"
+                     ngbTooltip="Enter series name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+            <label for="description" placement="top" ngbTooltip="Enter series description">
+            Series Description
+            </label>
+            <textarea rows="3" id="description" class="form-control" formControlName="description" placement="bottom"
+                   ngbTooltip="Enter series description"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-sm-6">
+            <label for="logoUrl" placement="top" ngbTooltip="Enter series logo url">
+              Series Logo Url
+            </label>
+            <input type="text" id="logoUrl" class="form-control" formControlName="logoUrl" placement="bottom"
+                   ngbTooltip="Enter series logo url">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="isTeam" formControlName="isTeam">
+            <label class="form-check-label" for="isTeam">
+              Team Series?
+            </label>
+          </div>
+          <div class="form-group form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="isArchived" formControlName="isArchived">
+            <label class="form-check-label" for="isArchived">
+              Archive Series?
+            </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cars">Car Select</label>
+            <select multiple class="form-control" id="cars" [formControl]="seriesForm.controls.cars" size="20">
+              <option *ngFor='let car of carList | async' [value]="car.id">
+                {{car.name}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting" placement="bottom"
+              ngbTooltip="Once submitted, protests cannot be edited!">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+        Submit
+      </button>
+    </div>
+  </form>
+</ng-template>

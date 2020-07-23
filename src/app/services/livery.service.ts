@@ -2,16 +2,21 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {Livery} from '../models/livery';
 import {HttpClient} from '@angular/common/http';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LiveryService {
-  private _baseUrl = 'https://api.racespot.media';
+  private _baseUrl = environment.baseUrl;
 
   constructor(private _http: HttpClient) { }
   getLiveriesBySeriesId(seriesId: string): Observable<Livery[]> {
     return this._http.get<Livery[]>(`${this._baseUrl}/series/${seriesId}/liveries`);
+  }
+
+  getAdminLiveriesBySeriesId(seriesId: string): Observable<Livery[]> {
+    return this._http.get<Livery[]>(`${this._baseUrl}/series/${seriesId}/liveries?showAll=true`);
   }
 
   finalizeUpload(liveryId: string): Observable<Livery> {
