@@ -26,6 +26,7 @@ export class AdminSeriesCreateModalComponent implements OnInit, AfterViewInit {
     isTeam: [false, Validators.required],
     isArchived: [false, Validators.required],
     cars: [[], Validators.required],
+    isLeague: [false, Validators.required]
   });
   carList: Observable<Car[]>;
   constructor(private _modalService: NgbModal,
@@ -64,7 +65,7 @@ export class AdminSeriesCreateModalComponent implements OnInit, AfterViewInit {
     }
 
     this.isSubmitting = true;
-    const { name, description, logoUrl, isTeam, isArchived, cars} = this.seriesForm.value;
+    const { name, description, logoUrl, isTeam, isArchived, cars, isLeague} = this.seriesForm.value;
     const series = new Series();
     series.name = name;
     series.description = description;
@@ -72,6 +73,7 @@ export class AdminSeriesCreateModalComponent implements OnInit, AfterViewInit {
     series.isTeam = isTeam;
     series.isArchived = isArchived;
     series.carIds = cars;
+    series.isLeague = isLeague;
     this._seriesService.postSeries(series).subscribe(
       () => {
         this.isSubmitting = false;
