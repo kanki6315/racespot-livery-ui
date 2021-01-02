@@ -25,7 +25,8 @@ export class AdminSeriesUpdateModalComponent implements OnInit, AfterViewInit {
     logoUrl: ['', Validators.required],
     isTeam: [false, Validators.required],
     isArchived: [false, Validators.required],
-    newCar: ['']
+    newCar: [''],
+    isLeague: [false, Validators.required]
   });
   carList: Car[] = [];
   series: Series;
@@ -75,12 +76,13 @@ export class AdminSeriesUpdateModalComponent implements OnInit, AfterViewInit {
     }
 
     this.isSubmitting = true;
-    const { name, description, logoUrl, isTeam, isArchived} = this.seriesForm.value;
+    const { name, description, logoUrl, isTeam, isArchived, isLeague} = this.seriesForm.value;
     this.series.name = name;
     this.series.description = description;
     this.series.logoImgUrl = logoUrl;
     this.series.isTeam = isTeam;
     this.series.isArchived = isArchived;
+    this.series.isLeague = isLeague;
     this.series.carIds = this.series.cars.map(t => t.id);
     this._seriesService.putSeries(this.series).subscribe(
       () => {

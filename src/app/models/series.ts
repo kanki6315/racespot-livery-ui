@@ -7,6 +7,7 @@ export class Series {
   isArchived: boolean;
   logoImgUrl: string;
   description: string;
+  isLeague: boolean;
   lastUpdated: Date;
   carIds: string[];
   cars: Car[];

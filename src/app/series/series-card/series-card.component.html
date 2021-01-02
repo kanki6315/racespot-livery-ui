@@ -8,6 +8,7 @@
         <h5 class="card-title">{{series.name}}</h5>
         <p class="card-text"><small class="text-muted">{{series.description}}</small></p>
         <p class="card-text" *ngIf="series.isTeam"><small class="text-muted">Team Series</small></p>
+        <p class="card-text" *ngIf="series.isLeague"><small class="text-muted">League Series</small></p>
         <button *ngIf="isAuthenticated | async" type="button" class="btn btn-primary mr-2" [routerLink]="[series.id]" [disabled]="!(isVerified | async)">My Paints</button>
       </div>
     </div>
