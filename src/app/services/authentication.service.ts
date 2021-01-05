@@ -58,7 +58,29 @@ export class AuthenticationService {
     return this.getUser().pipe(
       map(user => {
         if (user) {
+          return user.isAdmin || user.isLeagueAdmin;
+        }
+        return false;
+      })
+    );
+  }
+
+  public isRaceSpotAdmin(): Observable<boolean> {
+    return this.getUser().pipe(
+      map(user => {
+        if (user) {
           return user.isAdmin;
+        }
+        return false;
+      })
+    );
+  }
+
+  public isLeagueAdmin(): Observable<boolean> {
+    return this.getUser().pipe(
+      map(user => {
+        if (user) {
+          return user.isLeagueAdmin;
         }
         return false;
       })

@@ -48,6 +48,7 @@ export class AdminSeriesUpdateModalComponent implements OnInit, AfterViewInit {
       this.seriesForm.patchValue({logoUrl: this.series.logoImgUrl});
       this.seriesForm.patchValue({isTeam: this.series.isTeam});
       this.seriesForm.patchValue({isArchived: this.series.isArchived});
+      this.seriesForm.patchValue({isLeague: this.series.isLeague});
     });
   }
 

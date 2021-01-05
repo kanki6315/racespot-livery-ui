@@ -35,7 +35,8 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     liveryType: ['Car'],
     carName: [''],
     iracingId: [''],
-    liveryFile: ['']
+    liveryFile: [''],
+    isCustomNumber: [false]
   });
   private _file: File | null = null;
   private _liveryToUpload: Livery | null = null;
@@ -52,6 +53,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
       const livery = this.liveries.filter(l => l.liveryType === 'Car');
       if (livery.length !== 0) {
         this.uploadForm.patchValue({carName: livery[0].carName});
+        this.uploadForm.patchValue({isCustomNumber: livery[0].isCustomNumber});
         this.priorCar = livery[0].carName;
       }
       this.uploadForm.patchValue({iracingId: this.liveries[0].iTeamId});
@@ -91,6 +93,15 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     }
 
     return iracingId;
+  }
+
+  get isCustomNumber(): AbstractControl {
+    const isCustomNumber = this.uploadForm.get('isCustomNumber');
+    if (isCustomNumber === null) {
+      throw new Error('The isCustomNumber control does not exist');
+    }
+
+    return isCustomNumber;
   }
 
   get carName(): AbstractControl {
@@ -143,7 +154,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     }
     this._liveryToUpload = {liveryType: this.liveryType.value, file: this._file, previewUrl: null,
       iTeamId: this.iracingId.value, iTeamName: '', carName: this.carName.value, id: null, uploadUrl: '',
-      userId: '', firstName: '', lastName: ''};
+      userId: '', firstName: '', lastName: '', isCustomNumber: this.isCustomNumber.value};
     const carId = this.isCarSelected() ? this.series.cars.filter(c => c.name === this._liveryToUpload.carName)[0].id : '';
 
     this.uploadProgress = 10;
@@ -244,7 +255,8 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     this.isUploadingSpec = true;
     const carLivery = this.liveries.filter(l => l.liveryType === 'Car')[0];
     this._liveryToUpload = {liveryType: 'Spec Map', file: file, previewUrl: null,
-      iTeamId: carLivery.iTeamId, iTeamName: '', carName: carLivery.carName, id: null, uploadUrl: '', userId: '', firstName: '', lastName: ''};
+      iTeamId: carLivery.iTeamId, iTeamName: '', carName: carLivery.carName, id: null, uploadUrl: '', userId: '', firstName: '',
+      lastName: '', isCustomNumber: false};
     const carId = this.series.cars.filter(c => c.name === carLivery.carName)[0].id;
 
     this._liveryService.getPresignedUrl(this.series.id, this._liveryToUpload, carId).subscribe((returnLivery) => {

@@ -24,8 +24,13 @@ export class LiveryService {
   }
 
   getPresignedUrl(seriesId: string, livery: Livery, carId: string): Observable<Livery> {
-    return this._http.post<Livery>(`${this._baseUrl}/series/${seriesId}/liveries`,
-      {iTeamId: livery.iTeamId, carId: carId, liveryType: livery.liveryType});
+    if (livery.liveryType === 'Car') {
+      return this._http.post<Livery>(`${this._baseUrl}/series/${seriesId}/liveries`,
+        {iTeamId: livery.iTeamId, carId: carId, liveryType: livery.liveryType, isCustomNumber: livery.isCustomNumber});
+    } else {
+      return this._http.post<Livery>(`${this._baseUrl}/series/${seriesId}/liveries`,
+        {iTeamId: livery.iTeamId, carId: carId, liveryType: livery.liveryType});
+    }
   }
 
   upload(payload: File, url: string): Observable<any> {

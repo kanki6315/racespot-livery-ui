@@ -22,7 +22,7 @@ export class SeriesService {
   }
 
   getAdminSeries(): Observable<Series[]> {
-    return this._http.get<Series[]>(`${this._baseUrl}/series?showArchived=true`);
+    return this._http.get<Series[]>(`${this._baseUrl}/series/me?showArchived=true`);
   }
 
   postSeries(series: Series): Observable<Series> {
