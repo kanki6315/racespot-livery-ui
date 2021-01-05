@@ -10,4 +10,5 @@ export class Livery {
   userId: string;
   firstName: string | null;
   lastName: string | null;
+  isCustomNumber: boolean;
 }

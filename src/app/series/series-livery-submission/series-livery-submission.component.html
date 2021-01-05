@@ -25,6 +25,12 @@
       </div>
     </div>
   </div>
+  <div class="form-check mb-2" *ngIf="this.isEditable && this.liveryType.value === 'Car' && this.series.isLeague">
+    <input class="form-check-input" type="checkbox" id="isCustomNumber" formControlName="isCustomNumber">
+    <label class="form-check-label" for="isCustomNumber">
+      Check box if paint has custom number decals
+    </label>
+  </div>
   <div class="custom-file" *ngIf="isEditable">
     <input type="file" accept=".tga" class="custom-file-input" id="livery-{{series.id}}"
            formControlName="liveryFile" (change)="onFileAdded($event)">
