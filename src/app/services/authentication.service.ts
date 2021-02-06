@@ -113,7 +113,7 @@ export class AuthenticationService {
           return true;
         }
         let oneDayAgo = new Date();
-        oneDayAgo = new Date(oneDayAgo.getTime() - (1000 * 60 * 60 * 24)); // (1000 * 60 * 60 * 24));
+        oneDayAgo = new Date(oneDayAgo.getTime() - (1000 * 60 * 15)); // (1000 * 60 * 60 * 24) = 1 day);
         return new Date(user.lastInviteSent) < oneDayAgo;
       })
     );
