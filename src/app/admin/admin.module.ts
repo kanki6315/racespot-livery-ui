@@ -17,9 +17,10 @@ import { AdminLiveriesComponent } from './admin-liveries/admin-liveries.componen
 import { AdminSeriesCreateModalComponent } from './admin-series-create-modal/admin-series-create-modal.component';
 import { AdminSeriesUpdateModalComponent } from './admin-series-update-modal/admin-series-update-modal.component';
 import {SeriesModule} from '../series/series.module';
+import { AdminUsersComponent } from './admin-users/admin-users.component';
 
 @NgModule({
-  declarations: [AdminComponent, AdminSeriesComponent, AdminLiveriesComponent, AdminSeriesCreateModalComponent, AdminSeriesUpdateModalComponent],
+  declarations: [AdminComponent, AdminSeriesComponent, AdminLiveriesComponent, AdminSeriesCreateModalComponent, AdminSeriesUpdateModalComponent, AdminUsersComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,

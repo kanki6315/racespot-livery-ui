@@ -7,4 +7,5 @@ export class User {
   firstName: string;
   lastName: string;
   lastInviteSent: Date;
+  invitedIracingId: string;
 }

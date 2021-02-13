@@ -10,7 +10,8 @@ import {AuthenticationService} from '../services/authentication.service';
 export class AdminComponent implements OnInit {
   links = [
     { title: 'Series', fragment: 'series' },
-    { title: 'Liveries', fragment: 'liveries' }
+    { title: 'Liveries', fragment: 'liveries' },
+    { title: 'Users', fragment: 'users' }
   ];
   activeTab = 'liveries';
 

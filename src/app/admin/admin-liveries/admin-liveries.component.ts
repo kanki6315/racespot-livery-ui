@@ -65,6 +65,7 @@ export class AdminLiveriesComponent implements OnInit {
             this.teams.push({name: t.iTeamName, iRacingId: t.iTeamId, carName: t.carName});
           }
         });
+        this.teams.sort((a, b) => a.name.localeCompare(b.name));
         this.liveries = liveries;
       } else {
         liveries.forEach(t => {
@@ -79,6 +80,7 @@ export class AdminLiveriesComponent implements OnInit {
             this.users.push({firstName: t.firstName, lastName: t.lastName, carName: t.carName, userId: t.userId});
           }
         });
+        this.users.sort((a, b) => a.firstName.localeCompare(b.firstName));
         this.liveries = liveries;
       }
       this.isLoadingLiveries = false;

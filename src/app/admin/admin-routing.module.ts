@@ -8,6 +8,7 @@ import {AdminSeriesCreateModalComponent} from './admin-series-create-modal/admin
 import {SeriesModalComponent} from '../series/series-modal/series-modal.component';
 import {SeriesResolverService} from '../series/series-resolver.service';
 import {AdminSeriesUpdateModalComponent} from './admin-series-update-modal/admin-series-update-modal.component';
+import {AdminUsersComponent} from './admin-users/admin-users.component';
 
 const appRoutes: Routes = [
   {
@@ -34,6 +35,10 @@ const appRoutes: Routes = [
       {
         path: 'liveries',
         component: AdminLiveriesComponent
+      },
+      {
+        path: 'users',
+        component: AdminUsersComponent
       }
     ]
   }
