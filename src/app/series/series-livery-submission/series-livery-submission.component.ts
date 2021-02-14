@@ -9,6 +9,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Team} from '../../models/team';
 import {Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
+import {RejectionsService} from '../../services/rejections.service';
 
 @Component({
   selector: 'app-series-livery-submission',
@@ -29,6 +30,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   isUploading = false;
   isUploadingSpec = false;
   isDeleting = false;
+  isRejecting = false;
   liveryTypes = ['Car', 'Helmet', 'Suit'];
   carNames = [];
   uploadForm = this._formBuilder.group({
@@ -45,7 +47,8 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   constructor(private _liveryService: LiveryService,
               private _formBuilder: FormBuilder,
               private _authenticationService: AuthenticationService,
-              private _modalService: NgbModal) { }
+              private _modalService: NgbModal,
+              private _rejectionService: RejectionsService) { }
 
   ngOnInit() {
     if (this.liveries && this.liveries.length > 0) {
@@ -154,7 +157,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     }
     this._liveryToUpload = {liveryType: this.liveryType.value, file: this._file, previewUrl: null,
       iTeamId: this.iracingId.value, iTeamName: '', carName: this.carName.value, id: null, uploadUrl: '',
-      userId: '', firstName: '', lastName: '', isCustomNumber: this.isCustomNumber.value};
+      userId: '', firstName: '', lastName: '', isCustomNumber: this.isCustomNumber.value, isRejected: false, rejectionStatus: ''};
     const carId = this.isCarSelected() ? this.series.cars.filter(c => c.name === this._liveryToUpload.carName)[0].id : '';
 
     this.uploadProgress = 10;
@@ -223,6 +226,22 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     this._file = event.target.files[0];
   }
 
+  isRejected(): boolean {
+    if (this.liveryType.value === 'Spec Map') {
+      return false;
+    }
+    const livery = this.liveries.filter(l => l.liveryType === this.liveryType.value);
+    return livery.length > 0 && livery[0].isRejected;
+  }
+
+  isUpdatedAfterRejection(): boolean {
+    if (this.liveryType.value === 'Spec Map') {
+      return false;
+    }
+    const livery = this.liveries.filter(l => l.liveryType === this.liveryType.value);
+    return livery.length > 0 && livery[0].isRejected && livery[0].rejectionStatus === 'Updated';
+  }
+
   hasLiveryPreview(): boolean {
     if (this.liveryType.value === 'Spec Map') {
       return false;
@@ -256,7 +275,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     const carLivery = this.liveries.filter(l => l.liveryType === 'Car')[0];
     this._liveryToUpload = {liveryType: 'Spec Map', file: file, previewUrl: null,
       iTeamId: carLivery.iTeamId, iTeamName: '', carName: carLivery.carName, id: null, uploadUrl: '', userId: '', firstName: '',
-      lastName: '', isCustomNumber: false};
+      lastName: '', isCustomNumber: false, isRejected: false, rejectionStatus: ''};
     const carId = this.series.cars.filter(c => c.name === carLivery.carName)[0].id;
 
     this._liveryService.getPresignedUrl(this.series.id, this._liveryToUpload, carId).subscribe((returnLivery) => {
@@ -345,5 +364,43 @@ export class SeriesLiverySubmissionComponent implements OnInit {
   getDeletionButton() {
     const liveryType = this.liveryType.value;
     return `Delete ${liveryType}`;
+  }
+
+  rejectLivery() {
+    const search = this.liveries.filter(l => l.liveryType === this.liveryType.value);
+    if (search == null) {
+      return;
+    }
+    this.isRejecting = true;
+
+    const livery = search[0];
+    this._rejectionService.rejectLivery(livery).subscribe((result) => {
+      livery.isRejected = true;
+      this.isRejecting = false;
+    }, (error) => {
+      const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+      errorComponentInstance.errorMessage = error.error;
+      this.isRejecting = false;
+    });
+  }
+
+  updateLivery(status: string) {
+    const search = this.liveries.filter(l => l.liveryType === this.liveryType.value);
+    if (search == null) {
+      return;
+    }
+    this.isRejecting = true;
+
+    const livery = search[0];
+    this._rejectionService.updateStatus(livery, status).subscribe((result) => {
+      if (status === 'Resolved') {
+        livery.isRejected = false;
+      }
+      this.isRejecting = false;
+    }, (error) => {
+      const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+      errorComponentInstance.errorMessage = error.error;
+      this.isRejecting = false;
+    });
   }
 }

@@ -24,16 +24,16 @@
   </div>
   <div class="col" *ngIf="selectedSeries.isTeam && liveries && teams.length !== 0">
     <ngb-accordion activeIds="ngb-panel-0">
-      <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}} - {{team.carName}}">
+      <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}} - {{team.carName}}" [type]="checkTeamRejections(team)">
         <ng-template ngbPanelContent>
-          <app-series-livery-submission [series]="selectedSeries" [liveries]="idLiveryMap.get(team.iRacingId) || []" [team]="team" [teams]="teams"></app-series-livery-submission>
+          <app-series-livery-submission [series]="selectedSeries" [liveries]="idLiveryMap.get(team.iRacingId) || []" [team]="team" [teams]="teams" ></app-series-livery-submission>
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
   </div>
   <div class="col" *ngIf="!selectedSeries.isTeam && liveries && users.length !== 0">
     <ngb-accordion activeIds="ngb-panel-0">
-      <ngb-panel *ngFor="let user of users; index as i" title="{{user.firstName}} {{user.lastName}}">
+      <ngb-panel *ngFor="let user of users; index as i" title="{{user.firstName}} {{user.lastName}}" [type]="checkUserRejections(user)">
         <ng-template ngbPanelContent>
           <app-series-livery-submission [series]="selectedSeries" [liveries]="idLiveryMap.get(user.userId) || []"></app-series-livery-submission>
         </ng-template>
