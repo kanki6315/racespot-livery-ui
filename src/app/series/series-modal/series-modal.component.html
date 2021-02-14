@@ -21,7 +21,7 @@
       </div>
       <div class="col" *ngIf="series.isTeam && liveries && teams.length !== 0">
         <ngb-accordion activeIds="ngb-panel-0">
-          <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}} - {{team.carName}}">
+          <ngb-panel *ngFor="let team of teams; index as i" title="{{team.name}} - {{team.carName}}" [type]="checkTeamRejections(team)">
             <ng-template ngbPanelContent>
               <app-series-livery-submission [series]="series" [liveries]="teamLiveryMap.get(team.iRacingId) || []" [isEditable]="true" [team]="team" [teams]="teams"></app-series-livery-submission>
             </ng-template>

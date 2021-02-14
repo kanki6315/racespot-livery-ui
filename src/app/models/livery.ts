@@ -11,4 +11,6 @@ export class Livery {
   firstName: string | null;
   lastName: string | null;
   isCustomNumber: boolean;
+  isRejected: boolean;
+  rejectionStatus: string;
 }

@@ -96,4 +96,28 @@ export class AdminLiveriesComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
   }
+
+  checkTeamRejections(team: Team) {
+    const teamLiveries = this.idLiveryMap.get(team.iRacingId);
+    if (!teamLiveries || teamLiveries.length === 0) {
+      return '';
+    }
+    const rejectedLiveries = teamLiveries.filter(l => l.isRejected);
+    if (rejectedLiveries.length !== 0) {
+      return 'warning';
+    }
+    return '';
+  }
+
+  checkUserRejections(user: any) {
+    const userLiveries = this.idLiveryMap.get(user.userId);
+    if (!userLiveries || userLiveries.length === 0) {
+      return '';
+    }
+    const rejectedLiveries = userLiveries.filter(l => l.isRejected);
+    if (rejectedLiveries.length !== 0) {
+      return 'warning';
+    }
+    return '';
+  }
 }

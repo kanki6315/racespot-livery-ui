@@ -6,6 +6,8 @@ import {filter} from 'rxjs/operators';
 import {ErrorModalComponent} from './error-modal/error-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {environment} from '../environments/environment';
+import {RejectionsService} from './services/rejections.service';
+import {RejectionNotice} from './models/rejectionNotice';
 
 @Component({
   selector: 'app-root',
@@ -21,13 +23,19 @@ export class AppComponent implements OnInit, OnDestroy {
   public canSendVerification = this.authenticationService.canSendVerificationMessage();
   public isAdmin = this.authenticationService.isAdmin();
   public displayName = this.authenticationService.displayName();
+  public alerts: RejectionNotice[] = [];
 
   private subs =  new Subscription();
 
   constructor(private authenticationService: AuthenticationService,
+              private rejectionService: RejectionsService,
               private router: Router,
               private route: ActivatedRoute,
-              private _modalService: NgbModal) { }
+              private _modalService: NgbModal) {
+    this.rejectionService.getAlerts().subscribe((sub) => {
+      this.alerts = sub;
+    });
+  }
 
   ngOnInit() {
     this.subs.add(

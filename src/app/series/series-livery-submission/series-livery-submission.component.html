@@ -23,6 +23,9 @@
         <label for="iracing-id-{{series.id}}">Team ID</label>
         <input type="text" id="iracing-id-{{series.id}}" class="form-control" formControlName="iracingId">
       </div>
+      <div class="col-sm-1" *ngIf="isRejected()" >
+        <i class="bi-exclamation-triangle"style="font-size: 3rem; color: red;"></i>
+      </div>
     </div>
   </div>
   <div class="form-check mb-2" *ngIf="this.isEditable && this.liveryType.value === 'Car' && this.series.isLeague">
@@ -38,6 +41,35 @@
       {{ getLiveryFileName() || 'Choose livery' }}
     </label>
   </div>
+  <button *ngIf="!isEditable && hasLiveryPreview() && !isRejected()" type="button" class="btn btn-danger mt-2 mb-2"  mwlConfirmationPopover
+          popoverTitle="Reject Livery"
+          popoverMessage="Reject Livery"
+          confirmText="Reject?"
+          placement="left"
+          (confirm)="rejectLivery()" style="float: right;">
+    <span *ngIf="isRejecting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Reject Paint
+  </button>
+  <button *ngIf="!isEditable && hasLiveryPreview() && isUpdatedAfterRejection()" type="button" class="btn btn-success mt-2 mb-2"  mwlConfirmationPopover
+          popoverTitle="Approve Livery"
+          popoverMessage="Approve Livery"
+          confirmText="Approve?"
+          placement="left"
+          (confirm)="updateLivery('Resolved')" style="float: right;">
+    <span *ngIf="isRejecting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Approve Paint
+  </button>
+  <button *ngIf="!isEditable && hasLiveryPreview() && isUpdatedAfterRejection()" type="button" class="btn btn-danger mt-2 mb-2"  mwlConfirmationPopover
+          popoverTitle="Re-Reject Livery"
+          popoverMessage="Re-Reject Livery"
+          confirmText="Re-Reject?"
+          placement="left"
+          (confirm)="updateLivery('Rejected')" style="float: right;">
+    <span *ngIf="isRejecting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Re-reject Paint
+  </button>
+
+
   <button *ngIf="isEditable" type="button" class="btn btn-primary mt-2 mb-2" (click)="uploadLivery()">
     <span *ngIf="isUploading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     <span *ngIf="isUploading"> </span>

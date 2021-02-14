@@ -118,7 +118,8 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
     this.uploadProgress = 10;
     this.isUploadingHelmet = true;
     const livery = {liveryType: 'Helmet', file: file, previewUrl: null,
-      iTeamId: '', iTeamName: '', carName: '', id: null, uploadUrl: '', userId: '', firstName: '', lastName: '', isCustomNumber: false};
+      iTeamId: '', iTeamName: '', carName: '', id: null, uploadUrl: '', userId: '', firstName: '', lastName: '', isCustomNumber: false,
+      isRejected: false, rejectionStatus: ''};
 
     this._liveryService.getPresignedUrl(this.series.id, livery, '').subscribe((returnLivery) => {
       this.uploadProgress = 40;
@@ -179,5 +180,28 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
 
   getHelmetPreview() {
     return this.helmet.previewUrl;
+  }
+
+  checkTeamRejections(team: Team) {
+    const teamLiveries = this.teamLiveryMap.get(team.iRacingId);
+    if (!teamLiveries || teamLiveries.length === 0) {
+      return '';
+    }
+    const rejectedLiveries = teamLiveries.filter(l => l.isRejected);
+    if (rejectedLiveries.length !== 0) {
+      return 'warning';
+    }
+    return '';
+  }
+
+  checkUserRejections(user: any) {
+    if (!this.liveries || this.liveries.length === 0) {
+      return '';
+    }
+    const rejectedLiveries = this.liveries.filter(l => l.isRejected);
+    if (rejectedLiveries.length !== 0) {
+      return 'warning';
+    }
+    return '';
   }
 }
