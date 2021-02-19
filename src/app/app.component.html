@@ -16,9 +16,9 @@
       <li class="nav-item dropdown" ngbDropdown class="d-inline-block">
         <button class="btn btn-outline-dark mr-2" id="notificationDropdown" ngbDropdownToggle>
           <!-- empty bell -->
-          <i *ngIf="alerts.length == 0" class="bi bi-bell"></i>
+          <i *ngIf="alerts.length == 0" class="bi bi-shield-check"></i>
           <!-- filled bell -->
-          <i *ngIf="alerts.length > 0" class="bi bi-bell-fill"></i>
+          <i *ngIf="alerts.length > 0" class="bi bi-shield-fill-exclamation"></i>
         </button>
         <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="notificationDropdown">
           <span *ngIf="alerts.length == 0" class="dropdown-item-text">No alerts to show!</span>
