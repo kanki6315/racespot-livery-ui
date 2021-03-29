@@ -8,4 +8,6 @@ export class User {
   lastName: string;
   lastInviteSent: Date;
   invitedIracingId: string;
+  isAgreedToEmails: boolean;
+  lastUpdated: Date;
 }

@@ -157,7 +157,8 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     }
     this._liveryToUpload = {liveryType: this.liveryType.value, file: this._file, previewUrl: null,
       iTeamId: this.iracingId.value, iTeamName: '', carName: this.carName.value, id: null, uploadUrl: '',
-      userId: '', firstName: '', lastName: '', isCustomNumber: this.isCustomNumber.value, isRejected: false, rejectionStatus: ''};
+      userId: '', firstName: '', lastName: '', isCustomNumber: this.isCustomNumber.value, isRejected: false, rejectionStatus: '',
+      lastUpdated: null};
     const carId = this.isCarSelected() ? this.series.cars.filter(c => c.name === this._liveryToUpload.carName)[0].id : '';
 
     this.uploadProgress = 10;
@@ -275,7 +276,7 @@ export class SeriesLiverySubmissionComponent implements OnInit {
     const carLivery = this.liveries.filter(l => l.liveryType === 'Car')[0];
     this._liveryToUpload = {liveryType: 'Spec Map', file: file, previewUrl: null,
       iTeamId: carLivery.iTeamId, iTeamName: '', carName: carLivery.carName, id: null, uploadUrl: '', userId: '', firstName: '',
-      lastName: '', isCustomNumber: false, isRejected: false, rejectionStatus: ''};
+      lastName: '', isCustomNumber: false, isRejected: false, rejectionStatus: '', lastUpdated: null};
     const carId = this.series.cars.filter(c => c.name === carLivery.carName)[0].id;
 
     this._liveryService.getPresignedUrl(this.series.id, this._liveryToUpload, carId).subscribe((returnLivery) => {

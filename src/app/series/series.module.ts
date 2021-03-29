@@ -9,8 +9,6 @@ import { SeriesLiverySubmissionComponent } from './series-livery-submission/seri
 import {NgbAccordionModule, NgbAlertModule, NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
 import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
 
-
-
 @NgModule({
     declarations: [SeriesListComponent, SeriesCardComponent, SeriesModalComponent, SeriesLiverySubmissionComponent],
     exports: [

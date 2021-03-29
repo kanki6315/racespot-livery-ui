@@ -16,6 +16,7 @@ import {RejectionNotice} from './models/rejectionNotice';
 })
 export class AppComponent implements OnInit, OnDestroy {
   public defaultAlertMessage = 'User is not verified';
+  public verificationConfirmationMessage = 'Your account is now verified! To enable email notifications, visit the <a href="/settings">Settings</a> page!';
 
   public baseUrl = environment.baseUrl;
   public isAuthenticated = this.authenticationService.isAuthenticated();
@@ -41,6 +42,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.spyOnFragment()
     );
+    const agreedTermsAndService = localStorage.getItem('newTermsAndService');
+    if (environment.enablePrivacyPolicy && agreedTermsAndService === null) {
+      localStorage.setItem('newTermsAndService', 'true');
+      this.router.navigate(['privacy-policy']);
+    }
   }
 
   ngOnDestroy() {
@@ -69,6 +75,9 @@ export class AppComponent implements OnInit, OnDestroy {
           if (storedKey != null) {
             this.authenticationService.finalizeVerificationMessage(storedKey).subscribe((result) => {
               this.authenticationService.setIracingId(result);
+              const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+              errorComponentInstance.title = 'Success!';
+              errorComponentInstance.errorMessage =  this.verificationConfirmationMessage;
               this.router.navigate([]);
             }, error => {
               const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
@@ -84,6 +93,9 @@ export class AppComponent implements OnInit, OnDestroy {
             if (isLoggedIn) {
               this.authenticationService.finalizeVerificationMessage(value).subscribe((result) => {
                 this.authenticationService.setIracingId(result);
+                const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
+                errorComponentInstance.title = 'Success!';
+                errorComponentInstance.errorMessage = this.verificationConfirmationMessage;
                 this.router.navigate([]);
               }, error => {
                 const errorComponentInstance = this._modalService.open(ErrorModalComponent).componentInstance as ErrorModalComponent;
