@@ -54,6 +54,17 @@ export class AuthenticationService {
       );
   }
 
+  public isEmailEnabled(): Observable<boolean> {
+    return this.getUser().pipe(
+      map(user => {
+        if (user) {
+          return user.isAgreedToEmails;
+        }
+        return false;
+      })
+    );
+  }
+
   public isAdmin(): Observable<boolean> {
     return this.getUser().pipe(
       map(user => {
@@ -91,6 +102,14 @@ export class AuthenticationService {
     return this.getUser().pipe(
       map(user => {
         return user && user.iracingId ? user.iracingId : '';
+      })
+    );
+  }
+
+  public getEmailAddress(): Observable<string> {
+    return this.getUser().pipe(
+      map(user => {
+        return user && user.emailAddress ? user.emailAddress : '';
       })
     );
   }
@@ -182,6 +201,17 @@ export class AuthenticationService {
   setLastInviteDate() {
     this._getUserObservable.subscribe(user => {
       this.userUpdateSubject.next({...user, lastInviteSent: new Date()});
+    });
+  }
+
+  selfUserUpdate(isEmailEnabled: boolean): Observable<User> {
+    return this.http.put<User>(`${this._baseUrl}/users/me`, {isAgreedToEmails: isEmailEnabled});
+  }
+
+  setIsAgreedToEmails(isAgreedToEmails: boolean) {
+    this._getUserObservable.subscribe(user => {
+      this.userUpdateSubject.next({...user, isAgreedToEmails: isAgreedToEmails});
+      user.isAgreedToEmails = isAgreedToEmails;
     });
   }
 }

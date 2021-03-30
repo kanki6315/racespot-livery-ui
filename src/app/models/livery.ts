@@ -13,4 +13,5 @@ export class Livery {
   isCustomNumber: boolean;
   isRejected: boolean;
   rejectionStatus: string;
+  lastUpdated: Date;
 }

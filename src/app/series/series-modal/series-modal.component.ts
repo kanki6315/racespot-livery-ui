@@ -119,7 +119,7 @@ export class SeriesModalComponent implements OnInit, AfterViewInit {
     this.isUploadingHelmet = true;
     const livery = {liveryType: 'Helmet', file: file, previewUrl: null,
       iTeamId: '', iTeamName: '', carName: '', id: null, uploadUrl: '', userId: '', firstName: '', lastName: '', isCustomNumber: false,
-      isRejected: false, rejectionStatus: ''};
+      isRejected: false, rejectionStatus: '', lastUpdated: null};
 
     this._liveryService.getPresignedUrl(this.series.id, livery, '').subscribe((returnLivery) => {
       this.uploadProgress = 40;

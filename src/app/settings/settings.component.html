@@ -1,0 +1,61 @@
+<h1>User Settings</h1>
+<h6>To edit your iRacing Id, please contact the RaceSpot Team.</h6>
+<div [formGroup]="formGroup">
+  <div class="row justify-content-center">
+    <div class="col-sm-12">
+      <div class="form-group">
+        <label for="display-name">
+          Driver Name
+        </label>
+        <input type="text" id="display-name" class="form-control"
+               formControlName="displayName" readonly>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-sm-12">
+      <div class="form-group">
+        <label for="email-address">
+          Email Address
+        </label>
+        <input type="text" id="email-address" class="form-control"
+               formControlName="emailAddress" readonly>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-sm-12">
+      <div class="form-group">
+        <label for="iracing-id">
+          iRacing ID
+        </label>
+        <input type="text" id="iracing-id" class="form-control"
+               formControlName="iRacingId" readonly>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-sm-12">
+      Email Notifications : <b><span *ngIf="!(isEmailEnabled | async)">DISABLED</span><span *ngIf="isEmailEnabled | async">ENABLED</span></b>
+
+      <button *ngIf="!(isEmailEnabled | async)" type="button" class="btn btn-primary mt-2 mb-2"  mwlConfirmationPopover
+              popoverTitle="Enable Emails"
+              popoverMessage="Enable email notifications about your paint files."
+              confirmText="Enable?"
+              placement="left"
+              (confirm)="updateEmailStatus(true)" style="float: right;">
+        <span *ngIf="isEditing" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Enable Emails
+      </button>
+      <button *ngIf="isEmailEnabled | async" type="button" class="btn btn-danger mt-2 mb-2"  mwlConfirmationPopover
+              popoverTitle="Disable Emails"
+              popoverMessage="Disable email notifications about your paint files."
+              confirmText="Disable?"
+              placement="left"
+              (confirm)="updateEmailStatus(false)" style="float: right;">
+        <span *ngIf="isEditing" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Disable Emails
+      </button>
+    </div>
+  </div>
+</div>

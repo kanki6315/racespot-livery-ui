@@ -10,6 +10,10 @@ const routes: Routes = [
     canActivate: [AdminUsersGuard],
   },
   {
+    path: 'settings',
+    loadChildren: () => import('./settings/settings.module').then(mod => mod.SettingsModule),
+  },
+  {
     path: '',
     loadChildren: () => import('./series/series.module').then(mod => mod.SeriesModule),
   }
