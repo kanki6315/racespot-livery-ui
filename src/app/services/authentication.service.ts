@@ -211,6 +211,7 @@ export class AuthenticationService {
   setIsAgreedToEmails(isAgreedToEmails: boolean) {
     this._getUserObservable.subscribe(user => {
       this.userUpdateSubject.next({...user, isAgreedToEmails: isAgreedToEmails});
+      user.isAgreedToEmails = isAgreedToEmails;
     });
   }
 }
